@@ -42,9 +42,9 @@ T_amb       = 20;                             % Var -15 ~ 40
 %[text] ### Subsistema Electromagnetico
 Pp          = 3;
 lambda      = 0.016;
-L_q         = 5.8;
-L_d         = 6.6;
-L_ls        = 0.8;
+L_q         = 5.8e-3;
+L_d         = 6.6e-3;
+L_ls        = 0.8e-3;
 %[text] ### Subsistema Termico
 R_sREF      = 1.02;
 alpha_Cu    = 3.9e-3;
@@ -60,6 +60,13 @@ f_e         = 0;                          % Var -330 ~ 330
 % 
 %[text] ### Especificaciones de operacion
 %
+%[text] ## Modulador de Torque Equivalente
+%[text] ### Coeficientes de Resistencias para control de corriente
+p           = -5000;
+Rq          = abs(p)*L_q;
+Rd          = abs(p)*L_d;
+R0          = abs(p)*L_ls;
+
 
 %[appendix]{"version":"1.0"}
 %---
