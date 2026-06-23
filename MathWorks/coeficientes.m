@@ -1,7 +1,13 @@
+%[text] # Inicialización de Objetos Especiales
+BusTypes();
 %[text] # Coeficientes del Modelo "Sistema No Lineal"
 %[text] ## Condiciones Iniciales
-init_w_l        = 0;
-init_theta_l    = 0;
+init_w          = 0;
+init_theta      = 0;
+init_Iq         = 0;
+init_Id         = 0;
+init_I0         = 0;
+init_Ts         = 0;
 %[text] ## Sistema de la Carga
 %[text] ### Coeficientes
 b_l         = 0.1;                          % Incert +- 0.3
@@ -66,7 +72,16 @@ p           = -5000;
 Rq          = abs(p)*L_q;
 Rd          = abs(p)*L_d;
 R0          = abs(p)*L_ls;
-
+%[text] ## Controlador PID de posición/velocidad
+%[text] ### Ganancias
+Kp          = 1;
+Ki          = 1;
+Kd          = 1;
+%[text] ## Observador de Estado Reducido
+%[text] ### Ganancias
+K_ew         = 1;
+K_et         = 1;
+%[text] 
 
 %[appendix]{"version":"1.0"}
 %---
@@ -74,5 +89,5 @@ R0          = abs(p)*L_ls;
 %   data: {"heading1":{"color":"#268cdd"},"title":{"color":"#212121"}}
 %---
 %[metadata:view]
-%   data: {"layout":"onright"}
+%   data: {"layout":"inline"}
 %---
