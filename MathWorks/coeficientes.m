@@ -16,7 +16,8 @@ l_cm        = 0.25;
 J_cm        = 0.0208;                      
 l_l         = 0.50;                         
 m_l         = 1.5;                          % Var 0 ~ 1.5
-J_l         = 0.0833 + m_l * l_l^2;                          
+J_l         = 0.0833 + m_l * l_l^2;
+J_l_min         = 0.0833;
 k_l         = 0.1;                          
 g           = 9.80665;
 %[text] ### Especificaciones de Operacion
@@ -36,6 +37,7 @@ J_m         = 14.0e-6;
 b_m         = 15.0e-6;
 %[text] ### Coeficientes del Sistema Mecanico Equivalente
 J_eq        = J_m + J_l/(r_m2l^2);
+J_eq_min    =J_m + J_l_min/(r_m2l^2);
 b_eq        = b_m + b_l/(r_m2l^2);
 %[text] ## Sistemas de la Maquina PMSM
 %[text] ### Especificaciones de Operacion
