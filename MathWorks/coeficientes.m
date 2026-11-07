@@ -16,9 +16,10 @@ l_cm        = 0.25;
 J_cm        = 0.0208;                      
 l_l         = 0.50;                         
 m_l         = 1.5;                          % Var 0 ~ 1.5
-J_l         = 0.0833 + m_l * l_l^2;
-J_l_min     = 0.0833;
-k_l         = 0.1;                          
+J_l_min     = (m*l_cm^2 + J_cm);
+J_l         = J_l_min + m_l * l_l^2;
+k_l_min     = m*l_cm;
+k_l         = k_l_min + m_l*l_l;                          
 g           = 9.80665;
 %[text] ### Especificaciones de Operacion
 T_ld        = 5.0;                         % Step f(t)
@@ -26,7 +27,7 @@ T_ld        = 5.0;                         % Step f(t)
 %[text] ### Coeficientes
 % Motor 2 load
 % w_m = r * w_l
-r_m2l   = 120.0;                     
+r       = 120.0;                     
 %[text] ## Sistema Mecanico
 %[text] ### Especificaciones de operacion 
 n_lNOM      = 60;
@@ -36,9 +37,9 @@ T_qMAX      = 45.0;
 J_m         = 14.0e-6;
 b_m         = 15.0e-6;
 %[text] ### Coeficientes del Sistema Mecanico Equivalente
-J_eq        = J_m + J_l/(r_m2l^2);
-J_eq_min    = J_m + J_l_min/(r_m2l^2);
-b_eq        = b_m + b_l/(r_m2l^2);
+J_eq        = J_m + J_l/(r^2);
+J_eq_min    = J_m + J_l_min/(r^2);
+b_eq        = b_m + b_l/(r^2);
 %[text] ## Sistemas de la Maquina PMSM
 %[text] ### Especificaciones de Operacion
 n_mNOM      = 6600;
