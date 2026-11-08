@@ -39,4 +39,4 @@ codegen/
 *.sbproj.backup
 *.sbproj.bak
 
-./Agents
+Agents/
