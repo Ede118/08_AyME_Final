@@ -1,6 +1,7 @@
 %[text] # Inicialización de Objetos Especiales
 BusTypes();
 %[text] # Coeficientes del Modelo "Sistema No Lineal"
+%[text] <u>**Todos los coeficientes se encuentran con unidades SI**</u>
 %[text] ## Condiciones Iniciales
 init_w          = 0;
 init_theta      = 0;
@@ -10,7 +11,7 @@ init_I0         = 0;
 init_Ts         = 0;
 %[text] ## Sistema de la Carga
 %[text] ### Coeficientes
-b_l         = 0.1;                          % Incert +- 0.3
+b_l         = 0.1;                          % Incert +- 0.03
 m           = 1.0;                            
 l_cm        = 0.25;                        
 J_cm        = 0.0208;                      
@@ -30,7 +31,7 @@ T_ld        = 5.0;                         % Step f(t)
 r       = 120.0;                     
 %[text] ## Sistema Mecanico
 %[text] ### Especificaciones de operacion 
-n_lNOM      = 60;
+n_lNOM      = 60;       % rpm
 T_qNOM      = 17.0;
 T_qMAX      = 45.0;
 %[text] ### Coeficientes del Subsistema Mecanico
@@ -76,20 +77,24 @@ Rq          = abs(p)*L_q;
 Rd          = abs(p)*L_d;
 R0          = abs(p)*L_ls;
 %[text] ## Controlador PID de posición/velocidad
+%[text] ### Polos asignados en el controlador de movimiento
+zeta_mov    = 0.75;
+wn_mov      = 800;
 %[text] ### Ganancias
-Kp          = 1;
-Ki          = 1;
-Kd          = 1;
+Kd_mov      = wn_mov * (2*zeta_mov + 1) * J_eq;
+Kp_mov      = wn_mov^2 * (2*zeta_mov + 1) * J_eq;
+Ki_mov      = wn_mov^3 * J_eq;
 %[text] ## Observador de Estado Reducido
 %[text] ### Ganancias
-K_ew         = 1;
-K_et         = 1;
+p_obs       = 3200;
+K_et        = 2*p_obs;
+K_ew        = p_obs^2;
 %[text] 
 
 %[appendix]{"version":"1.0"}
 %---
 %[metadata:styles]
-%   data: {"heading1":{"color":"#268cdd"},"title":{"color":"#212121"}}
+%   data: {"heading1":{"color":"#268cdd"},"referenceBackgroundColor":"#ffffff","title":{"color":"#212121"}}
 %---
 %[metadata:view]
 %   data: {"layout":"inline"}
