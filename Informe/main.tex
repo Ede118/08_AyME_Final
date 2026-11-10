@@ -10,6 +10,37 @@
 \usepackage{cancel}
 \usepackage{booktabs}
 
+% Tipografia del informe: cuerpo de 10 pt, interlineado de 12 pt y titulos escalados por 10/8.5.
+% Se aplica aqui porque la clase fija sus propios tamanos en \maketitle.
+\makeatletter
+\renewcommand{\normalsize}{\@setfontsize\normalsize{10}{12}}
+\makeatother
+
+% Fuentes matematicas: 8 pt; subindices de 6 pt y segundo nivel de 5 pt.
+\DeclareMathSizes{10}{10}{8}{7}
+\apptocmd{\maketitle}{\normalsize}{}{%
+    \PackageError{informe}{No se pudo ajustar el cuerpo del informe}{}%
+}
+\patchcmd{\maketitle}{\fontsize{21}{35}}{\fontsize{24.7059}{41.1765}}{}{%
+    \PackageError{informe}{No se pudo ajustar el titulo principal}{}%
+}
+\patchcmd{\maketitle}{\fontsize{11.5}{13.8}}{\fontsize{13.5294}{16.2353}}{}{%
+    \PackageError{informe}{No se pudo ajustar el titulo del resumen}{}%
+}
+\patchcmd{\maketitle}{\fontsize{9}{10.35}}{\fontsize{10.5882}{12.1765}}{}{%
+    \PackageError{informe}{No se pudo ajustar el texto del resumen}{}%
+}
+\titleformat{\section}
+    {\fontsize{13.5294}{16.2353}\selectfont\sffamily\bfseries\color{themecolor}}
+    {\thesection.}{0.5em}{}
+\titleformat{\subsection}
+    {\fontsize{12.3529}{14.8235}\selectfont\sffamily\bfseries\color{themecolor}}
+    {\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}
+    {\fontsize{11.7647}{14.1176}\selectfont\sffamily\bfseries\color{darkgray}}
+    {\thesubsubsection.}{0.5em}{}
+
+
 
 %% Document metadata
 \journalname{}
@@ -1337,7 +1368,7 @@ Considerando la $T_{amb}=20^\circ C$
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.6\linewidth]{Compa_NL_LTI_posici_ang.png}
+    \includegraphics[width=0.6\linewidth]{attachments/Compa_NL_LTI_posici_ang.png}
     \caption{Posición Angular respecto a Tiempo}
     \label{fig:placeholder}
 \end{figure}
@@ -1345,7 +1376,7 @@ Considerando la $T_{amb}=20^\circ C$
 \FloatBarrier
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.6\linewidth]{Compa_NL_LTI_vel_ang.png}
+    \includegraphics[width=0.6\linewidth]{attachments/Compa_NL_LTI_vel_ang.png}
     \caption{Velocidad Angular respecto al Tiempo}
     \label{fig:placeholder}
 \end{figure}
@@ -1353,7 +1384,7 @@ Considerando la $T_{amb}=20^\circ C$
 \FloatBarrier
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.6\linewidth]{Compa_NL_LTI_Ia.png}
+    \includegraphics[width=0.6\linewidth]{attachments/Compa_NL_LTI_Ia.png}
     \caption{Corriente Ia respecto al Tiempo (Amarillo->LTI Aumentado; Azul-> NL con Ley}
     \label{fig:placeholder}
 \end{figure}
@@ -1361,7 +1392,7 @@ Considerando la $T_{amb}=20^\circ C$
 \FloatBarrier
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.6\linewidth]{Compa_NL_LTI_Ib.png}
+    \includegraphics[width=0.6\linewidth]{attachments/Compa_NL_LTI_Ib.png}
     \caption{Corriente Ib respecto al Tiempo (Amarillo->LTI Aumentado; Azul-> NL con Ley}
     \label{fig:placeholder}
 \end{figure}
@@ -1369,7 +1400,7 @@ Considerando la $T_{amb}=20^\circ C$
 \FloatBarrier
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.6\linewidth]{Compa_NL_LTI_Ic.png}
+    \includegraphics[width=0.6\linewidth]{attachments/Compa_NL_LTI_Ic.png}
     \caption{Corriente Ic respecto al Tiempo (Amarillo->LTI Aumentado; Azul-> NL con Ley}
     \label{fig:placeholder}
 \end{figure}
@@ -1377,7 +1408,7 @@ Considerando la $T_{amb}=20^\circ C$
 \FloatBarrier
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.6\linewidth]{Compa_NL_LTI_Id.png}
+    \includegraphics[width=0.6\linewidth]{attachments/Compa_NL_LTI_Id.png}
     \caption{Corriente Virtual Id}
     \label{fig:placeholder}
 \end{figure}
@@ -1385,7 +1416,7 @@ Considerando la $T_{amb}=20^\circ C$
 \FloatBarrier
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.6\linewidth]{Compa_NL_LTI_Iq.png}
+    \includegraphics[width=0.6\linewidth]{attachments/Compa_NL_LTI_Iq.png}
     \caption{Corriente Virtual Iq}
     \label{fig:placeholder}
 \end{figure}
@@ -1393,7 +1424,7 @@ Considerando la $T_{amb}=20^\circ C$
 \FloatBarrier
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.6\linewidth]{Compa_NL_LTI_Temp_estator.png}
+    \includegraphics[width=0.6\linewidth]{attachments/Compa_NL_LTI_Temp_estator.png}
     \caption{Temperatura del Estator}
     \label{fig:placeholder}
 \end{figure}
@@ -1401,7 +1432,7 @@ Considerando la $T_{amb}=20^\circ C$
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.75\linewidth]{Cuadrantes de Operación.png}
+    \includegraphics[width=0.75\linewidth]{attachments/Cuadrantes de Operación.png}
     \caption{curvas paramétricas torque vs velocidad}
     \label{fig:placeholder}
 \end{figure}
@@ -1509,50 +1540,50 @@ $t_{event}\text{ (s)}$ & $y_0\text{ (A)}$ & $y_f\text{ (A)}$ & $\text{RiseTime}_
 % ============================================================================= %
 % [Start 10/11/2026]
 
-\section{Diseño, Análisis y Simulación con CONTROLADOR de Movimiento en
-Cascada con Modulador de Torque equivalente (Control Vectorial)}
+\section{Diseño, análisis y simulación con controlador de movimiento en
+cascada con modulador de torque equivalente (control vectorial)}
 
-Durante la sección anterior, se analizó la planta a lazo abierto de diferentes formas: Modelo LPV, Modelo LTI Equivalente, Estabilidad, Controlabilidad, Observabilidad. A partir de este punto, el foco de estudio se desplaza al diseño de una estrategia de control a lazo cerrado del tipo \textbf{control en cascada}, la cual, a diferencia de una estrategia de realimentación completa de estados, aprovecha la diferencia natural entre las constantes de tiempo del sistema eléctrico y mecánico.
+En la sección anterior se estudió la planta a lazo abierto mediante los modelos LPV y LTI equivalente, y se analizaron sus propiedades de estabilidad, controlabilidad y observabilidad. A continuación, se aborda el diseño de una estrategia de control a lazo cerrado basada en el \textbf{control en cascada}. Esta estructura aprovecha la diferencia entre las constantes de tiempo de los subsistemas eléctrico y mecánico para organizar el control en lazos con distintas velocidades de respuesta.
 
-Esta estrategia divide el problema en dos lazos de actuación principales:
+La estrategia se organiza en dos lazos principales:
 
 \begin{itemize}
-    \item \textbf{Lazo interno (rápido)}: Encargado de controlar la dinámica eléctrica de la máquina (corrientes y consecuente torque electromagnético). Posee una alta velocidad de respuesta
-    \item \textbf{Lazo externo (lento):} Encargado de la dinámica mecánica, controlando la posición y la velocidad del accionamiento frente a los requerimientos de la carga.
+    \item \textbf{Lazo interno (rápido):} Controla la dinámica eléctrica de la máquina, regulando las corrientes y, por consiguiente, el torque electromagnético. Su respuesta debe ser más rápida que la del lazo externo.
+    \item \textbf{Lazo externo (lento):} Controla la dinámica mecánica del accionamiento para satisfacer las consignas de posición y velocidad frente a los requerimientos de la carga.
 \end{itemize}
     
-Para lograr este diseño de control en cascada, el controlador completo se ha estructurado en los siguientes bloques funcionales:
+Para implementar esta estrategia, el sistema de control se estructura en los siguientes bloques funcionales:
 
 \begin{itemize}
-    \item \textbf{Modulador de Torque Equivalente (Lazo Interno):} Actúa como puente entre el mundo mecánico y el eléctrico. A partir de la consigna de torque y compensando las realimentaciones cruzadas de la máquina (desacople), calcula las referencias de tensión necesarias en los ejes rotativos para forzar a las corrientes a alcanzar su valor deseado.
-    \item \textbf{Modulador de Tensión (Inversor):} Es la etapa de potencia física que transforma las señales de control de tensión (calculadas por el modulador de torque) en tensiones trifásicas efectivas aplicadas a los bornes del estator.
-    \item \textbf{Controlador de Movimiento (Lazo Externo):} Consiste en un esquema PID que recibe el perfil de trayectoria deseado (consignas de posición o velocidad) y, en función del error, genera la referencia de torque electromagnético necesario para el motor.
-    \item \textbf{Observador de Estado de Orden Reducido:} Dado que en la práctica no siempre se miden todas las variables mecánicas, este bloque se incorpora para estimar los estados no medidos (como la velocidad del rotor) a partir de las mediciones del sensor de posición, garantizando así la información necesaria para cerrar los lazos de control sin recurrir a derivaciones puras ruidosas.
+    \item \textbf{Modulador de torque equivalente (lazo interno):} Vincula la consigna de torque con las variables eléctricas de la máquina. Mediante la generación de referencias de corriente, su regulación y la compensación de los acoplamientos, determina las tensiones necesarias en los ejes rotativos para alcanzar el torque solicitado.
+    \item \textbf{Modulador de tensión (inversor):} Constituye la etapa de potencia que convierte las señales de control de tensión, calculadas por el modulador de torque, en tensiones trifásicas aplicadas a los bornes del estator.
+    \item \textbf{Controlador de movimiento (lazo externo):} Emplea un esquema PID que recibe las consignas de movimiento y genera la referencia de torque a partir de los errores de seguimiento.
+    \item \textbf{Observador de estado de orden reducido:} Estima las variables mecánicas no medidas, como la velocidad del rotor, a partir de la posición medida y del modelo del sistema. De esta manera, proporciona la información necesaria para la realimentación sin recurrir a la derivación directa de la señal de posición, sensible al ruido de medición.
 \end{itemize}
 
 
 
 
 % ---------------------------------------------------------------------------- %
-\subsection{Modulador de Torque Equivalente}
-A continuación, se realiza el diseño de un Modulador de Torque Equivalente, el cual recibe como consigna un valor de torque a aplicar al sistema y entrega en su salida los valores de tensiones que deben aplicarse para cumplir dicha consigna.
+\subsection{Modulador de torque equivalente}
+El modulador de torque equivalente recibe una consigna de torque y calcula las tensiones que deben aplicarse a la máquina para producirlo. Su diseño combina la compensación de las realimentaciones naturales de la planta con la regulación de las corrientes virtuales.
 
-Para el diseño del Modulador de Torque Equivalente, la tarea es divida en 3 partes:
+El desarrollo se divide en tres etapas:
 \begin{itemize}
-    \item Modulación de Tensiones y Desacople por Retroalimentación No Lineal
-    \item Diseño de Lazos de Control para Corriente Virtual con Desacoplamiento mutuo y respecto a la velocidad angular
-    \item Compensación del Torque de Carga por Gravedad 
+    \item Modulación de tensiones y desacoplamiento por realimentación no lineal.
+    \item Diseño de los lazos de control de corrientes virtuales con desacoplamiento mutuo y respecto de la velocidad angular.
+    \item Compensación del torque de carga por gravedad.
 \end{itemize}
 
-El diseño del controlador de torque equivalente se resume a:
+En conjunto, estas etapas permiten pasar de la consigna de torque a las referencias de corriente y, a partir de ellas, a las tensiones virtuales que se aplican a la planta global no lineal.
 
 % Realizar gráfico:
 
 % Consigna Torque ->_{define} Consigna Corriente Virtual Q ->_{define} Consigna de Tensiones Virtuales dq0 ->_{obtiene} Tensiones Virtuales dq0 a aplicar a la planta Global No Lineal. 
 
-\subsubsection{Modulación de Tensiones y Desacople por Retroalimentación No Lineal}
+\subsubsection{Modulación de tensiones y desacoplamiento por realimentación no lineal}
 
-A partir de las variables de control del sistema, se sabe que con la modulación de las tensiones virtuales $v_{ds}^{r}(t)$, $v_{qs}^{r}(t)$ y $v_{0s}^{r}(t)$ es posible controlarse los valores de las variables de estado. Las tensiones virtuales actúan directamente en la dinámica de las corrientes virtuales, y el acople de las corrientes virtuales con la dinámica de la velocidad angular es lo que me permite controlar la posición y velocidad angular del sistema. Es por ello que viendo la dinámica de las corrientes virtuales se tiene:
+Las tensiones virtuales $v_{ds}^{r}(t)$, $v_{qs}^{r}(t)$ y $v_{0s}^{r}(t)$ son las entradas de control del subsistema electromagnético y actúan directamente sobre la dinámica de las corrientes virtuales. Estas corrientes determinan el torque electromagnético que, a su vez, modifica la velocidad y la posición angular del accionamiento. Por lo tanto, el diseño comienza por las ecuaciones de las corrientes:
 
 \begin{align*}
 \frac{di_{ds}^{r}(t)}{dt} & = \frac{1}{L_{d}} \left[ v_{ds}^{r}(t) - R_{s} \Big( T_{s}^{\circ} (t) \Big) i_{ds}^{r}(t) + L_{q}i_{qs}^{r}(t) \omega_{m}(t)P_{p}  \right]  \\
@@ -1560,29 +1591,29 @@ A partir de las variables de control del sistema, se sabe que con la modulación
 \frac{di_{0s}^{r}(t)}{dt} & = \frac{1}{ L_{ls} } \left[ v_{0s}^{r}(t) - R_{s} \Big( T_{s}^{\circ} (t) \Big) i_{0s}^{r}(t) \right]
 \end{align*}
 
-Para eliminar los términos no lineales, las tensiones virtuales deben tener las siguientes magnitudes
+Para compensar las caídas resistivas y los términos de acoplamiento y fuerza contraelectromotriz, se proponen las siguientes tensiones virtuales:
 \begin{align}
 v_{ds}^{r}(t) & = v_{ds}^{*r}(t) + R_{s} \Big( T_{s}^{\circ} (t) \Big) i_{ds}^{r}(t) - L_{q}i_{qs}^{r}(t) \omega_{m}(t)P_{p}    \\
 v_{qs}^{r}(t) & = v_{qs}^{*r}(t) + R_{s} \Big( T_{s}^{\circ} (t) \Big) i_{qs}^{r}(t) + \big[ \lambda_{m}^{'r} + L_{d} i_{ds}^{r}(t) \big] \omega_{m}(t)P_{p}  \\
 v_{0s}^{r}(t) & = v_{0s}^{*r}(t) + R_{s} \Big( T_{s}^{\circ} (t) \Big) i_{0s}^{r}(t) 
 \end{align}
 
-\noindent \textbf{Donde:}
+\noindent Las consignas de tensión se definen como:
 \begin{description}[leftmargin=1.2cm, labelwidth=1cm]
     \item[$v_{ds}^{*r}(t)$] Consigna de tensión del eje directo.
     \item[$v_{qs}^{*r}(t)$] Consigna de tensión del eje en cuadratura.
     \item[$v_{0s}^{*r}(t)$] Consigna de tensión del eje cero.
 \end{description}
 
-y sustituyendo estos valores de $v_{ds}^{r}(t)$, $v_{qs}^{r}(t)$ y $v_{0s}^{r}(t)$ en las ecuaciones dinámicas de (num) se tiene:
+Al sustituir estos valores de $v_{ds}^{r}(t)$, $v_{qs}^{r}(t)$ y $v_{0s}^{r}(t)$ en las ecuaciones dinámicas de las corrientes, se obtiene:
 
 \begin{align*}
 \frac{di_{ds}^{r}(t)}{dt} & = \frac{1}{L_{d}} \Bigg[ \Big( v_{ds}^{*r}(t) + \cancel{ R_{s} \Big( T_{s}^{\circ} (t) \Big) i_{ds}^{r}(t) } - \cancel{ L_{q}i_{qs}^{r}(t) \omega_{m}(t)P_{p} } \Big) - \cancel{ R_{s} \Big( T_{s}^{\circ} (t) \Big) i_{ds}^{r}(t) } + \cancel{ L_{q}i_{qs}^{r}(t) \omega_{m}(t)P_{p}  } \Bigg]  \\
 \frac{di_{qs}^{r}(t)}{dt}  & = \frac{1}{L_{q} } \Bigg[ \Big( v_{qs}^{*r}(t) +\cancel{  R_{s} \Big( T_{s}^{\circ} (t) \Big) i_{qs}^{r}(t) } +\cancel{  \big[ \lambda_{m}^{'r} + L_{d} i_{ds}^{r}(t) \big] \omega_{m}(t)P_{p}  } \Big) - \cancel{ R_{s} \Big( T_{s}^{\circ} (t) \Big) i_{qs}^{r}(t) } - \cancel{ \big[ \lambda_{m}^{'r} + L_{d} i_{ds}^{r}(t) \big] \omega_{m}(t)P_{p}  }\Bigg]  \\
-\frac{di_{0s}^{r}(t)}{dt} & = \frac{1}{ L_{ls} } \Bigg[ \Big( v_{0s}^{*r}(t) + \cancel{ R_{s} \Big( T_{s}^{\circ} (t)C \Big) i_{0s}^{r}(t) }  \Big) -\cancel{  R_{s} \Big( T_{s}^{\circ} (t) \Big) i_{0s}^{r}(t) } \Bigg]
+\frac{di_{0s}^{r}(t)}{dt} & = \frac{1}{ L_{ls} } \Bigg[ \Big( v_{0s}^{*r}(t) + \cancel{ R_{s} \Big( T_{s}^{\circ} (t) \Big) i_{0s}^{r}(t) }  \Big) -\cancel{  R_{s} \Big( T_{s}^{\circ} (t) \Big) i_{0s}^{r}(t) } \Bigg]
 \end{align*}
 
-lo que simplificaría las dinámicas de las corrientes virtuales a:
+Con esta compensación, las dinámicas de las corrientes virtuales se simplifican a:
 \begin{align}
 \frac{di_{ds}^{r}(t)}{dt} & = \frac{1}{L_{d}} v_{ds}^{*r}(t)  \\
 \frac{di_{qs}^{r}(t)}{dt}  & = \frac{1}{L_{q} } v_{qs}^{*r}(t) \\
@@ -1593,19 +1624,19 @@ lo que simplificaría las dinámicas de las corrientes virtuales a:
 
 % Realizar gráficos de comparaciones
 
-\subsubsection{Diseño de Lazos de Control para Corriente Virtual con Desacoplamiento mutuo y respecto a la velocidad angular}
+\subsubsection{Diseño de los lazos de control de corrientes virtuales con desacoplamiento mutuo y respecto de la velocidad angular}
 
-El lazo de control de las corrientes virtuales se diseña con un modelo de controlador proporcional al error. Como el procedimiento para las corrientes virtuales es el mismo (corriente en eje directo, corriente en eje en cuadratura y corriente en eje cero) se realiza el desarrollo de manera general sin subindices.
+Una vez compensadas las realimentaciones naturales, cada corriente virtual se regula mediante un controlador proporcional al error de seguimiento. El procedimiento es análogo para los ejes directo, en cuadratura y cero; por ello, se presenta primero un desarrollo general, sin subíndices.
 
-Las características del controlador porporcional imponen que el polo debe encontrarse en $p=-5000\;\frac{\text{rad}}{\text{seg}}$, en donde deja un bandwith de $|p|=2\pi f_c=5000\;\frac{\text{rad}}{\text{seg}} \implies f_c \approx 796\; \textbf{Hz}$. Si las consignas de tensiones tienen magnitud tal que:
+Como criterio de diseño, se fija el polo de cada lazo de corriente en $p=-5000\;\frac{\text{rad}}{\text{seg}}$. Para la respuesta de primer orden resultante, esta elección corresponde a un ancho de banda de $|p|=2\pi f_c=5000\;\frac{\text{rad}}{\text{seg}} \implies f_c \approx 796\; \textbf{Hz}$. La consigna de tensión se define mediante la ley proporcional:
 \[
 v^{*}(t) = K_{p} \Big( i^{*}(t) -i(t) \Big)
 \]
-al reemplazar en las dinámicas de las corrientes virtuales (posterior a la retroalimentación no lineal) se llega a la expresión:
+Al sustituir esta ley en la dinámica de corriente obtenida tras la compensación, resulta:
 \[
 \frac{di(t)}{dt} = \frac{1}{L} v^{*}(t) =  \frac{1}{L} K_{p} \Big( i^{*}(t) -i(t) \Big)
 \]
-y al trabajar en el plano complejo $s$, se opera hasta obtener la expresión de la función de transferencia del controlador:
+Aplicando la transformada de Laplace con condiciones iniciales nulas y agrupando los términos en el dominio complejo $s$, se obtiene la función de transferencia de seguimiento de corriente del lazo cerrado:
 \begin{align*}
 \frac{di(t)}{dt}  & = \frac{K_{p}}{L}  \Big( i^{*}(t) -i(t) \Big) \\
 sI & = \frac{K_{p}}{L} \Big( I^{*} - I \Big) \\
@@ -1613,55 +1644,55 @@ sI & = \frac{K_{p}}{L} \Big( I^{*} - I \Big) \\
 \frac{I}{I^{*}} & = \frac{\frac{K_{p}}{L}}{s+\frac{K_{p}}{L}}=\frac{1}{\frac{L}{K_{p}}s+1}
 \end{align*}
 
-Esto permite apreciar claramente la existencia de un polo en $p=-\frac{K_{p}}{L}$; por ello, la ganancia $K_p$ debe tener dimensión $[\Omega]$. Las funciones de transferencia particulares a cada corriente virtual queda así:
+El lazo presenta un polo en $p=-\frac{K_{p}}{L}$. La ganancia $K_p$ tiene dimensión de resistencia, $[\Omega]$, y se denota mediante la letra R para cada eje. Así, las funciones de transferencia particulares son:
 \begin{align}
 \frac{I_{d}}{I_{d}^{*}} & = \frac{1}{\frac{L_d}{R_{d}}s+1} \\
 \frac{I_{q}}{I_{q}^{*}} & = \frac{1}{\frac{L_q}{R_{q}}s+1} \\
 \frac{I_{0}}{I_{0}^{*}} & = \frac{1}{\frac{L_{ls}}{R_{0}}s+1}
 \end{align}
 
-y los valores de cada ganancia se calcula tal que:
+Las ganancias necesarias para ubicar los tres polos en el valor especificado se calculan como:
 \[
 p = -\frac{R}{L} \implies \begin{cases}
 R_{d} & = 5000 L_{d} = 33\; [\Omega] \\
 R_{q} & = 5000 L_{q} = 29\; [\Omega]\\
-R_{0} & = 5000 L_{sl} = 4\; [\Omega]
+R_{0} & = 5000 L_{ls} = 4\; [\Omega]
 \end{cases}
 \]
 
 
 % > ¿Qué provoca agregar acción integral? Investigar sus consecuencias.
 
-\subsubsection{Compensación del Torque de Carga por Gravedad }
+\subsubsection{Compensación del torque de carga por gravedad}
 
-Finalmente, se definen las consignas de corrientes virtuales a partir del lazo de control de torque. Usualmente, se busca imponer las siguientes consignas de corrientes virtuales
+El paso siguiente consiste en definir las referencias de corriente a partir de la consigna de torque. Como condición inicial de diseño, se adoptan las siguientes consignas:
 \begin{align*}
 i_{ds}^{*r}(t) & = 0 \\
 i_{qs}^{*r}(t) & \neq 0 \\
 i_{0s}^{*r}(t) & = 0
 \end{align*}
 
-debido a que con la corriente en cuadratura se controla el torque útil, mientras que la corriente directa permite reforzar o debilitar el campo y la corriente zero solo provocan pérdidas. Si bien existe el caso particular donde $i_{ds}^{*r}(t) \neq 0$ (denominado *field weakening / field forcing*, dependiendo del signo de la corriente) se empieza el estudio con el caso $i_{ds}^{*r}(t) = 0$.
+La corriente en cuadratura permite regular el torque útil, mientras que la corriente directa modifica el campo magnético y la corriente de secuencia cero solo introduce pérdidas. Aunque puede considerarse el caso $i_{ds}^{*r}(t) \neq 0$ para debilitar o reforzar el campo (\textit{field weakening} o \textit{field forcing}, según el signo de la corriente), el estudio comienza con $i_{ds}^{*r}(t) = 0$.
 
-Para realizar el desacople por fricción viscosa equivalente y la compensación del torque gravitatorio de la carga, se debe estudiar la ecuación que rige la dinámica de la velocidad angular del motor, esto es:
+Para compensar la fricción viscosa equivalente y el torque gravitatorio de la carga, se retoma la ecuación de la velocidad angular del motor:
 
 \[
 \frac{d\omega_{m}(t)}{dt} = \frac{1}{J_{eq}} \Bigg[ \frac{3}{2}P_{p} \lambda_{m}^{'r} i_{qs}^{r}(t) + \frac{3}{2} P_{p} \Big( L_{d} - L_{q} \Big) i_{qs}^{r}(t) i_{ds}^{r}(t) - b_{eq}  \omega_{m}(t)   - \frac{1}{r} T_{dl}(t) - \frac{k_{l}g}{r} \sin \left(  \frac{1}{r} \theta_{m}(t) \right) \Bigg]
 \]
 
-donde se busca que se cumpla:
+El objetivo es obtener la siguiente relación entre la consigna de torque y la aceleración angular:
 \[
-\frac{d\omega_{m}(t)}{dt} = \frac{T_{m}^{*}(t)}{J_{eq}}
+\frac{d\omega_{m}(t)}{dt} = \frac{T_{m}^{*}(t)}{J_{eq}} 
 \]
 
-Debido a que el torque $T_{dl}$ es un \textbf{torque de perturbación de la carga mecánica} no se utiliza su expresión en la retroalimentación no lineal, ya que su naturaleza es aleatoria en cuanto al estudio de control respecta (desconocemos su magnitud y evolución en el tiempo). Para ello, el torque otorgado por el motor deberá ser:
+El torque $T_{dl}$ constituye una \textbf{perturbación de la carga mecánica}, cuya magnitud y evolución temporal se consideran desconocidas para el controlador. Por esta razón, no se incorpora a la ley de compensación. El torque solicitado al motor incluye la consigna de movimiento y las compensaciones viscosa y gravitatoria:
 
 \begin{align*}
 T_{m}(t) & = T_{m}^{*}(t) +b_{eq}\omega_{m}(t) + \frac{k_{l}g}{r} \sin \left( \frac{1}{r} \theta_{m}(t)  \right) \\
 T_{m}(t) & \approx \frac{3}{2}P_{p} \Big[ \lambda_{m}^{'r} + \Big( L_{d}-L_{q} \Big)i_{ds}^{r}(t) \Big] i_{qs}^{*r}(t)
 \end{align*}
 
-despejando la consigna de corriente en cuadratura, se puede llegar al valor:
+Al despejar la referencia de corriente en cuadratura, se obtiene:
 
 $$
 i_{qs}^{*r}(t) = \frac{T_{m}^{*}(t) +b_{eq}\omega_{m}(t) + \frac{k_{l}g}{r} \sin \left( \frac{1}{r} \theta_{m}(t)  \right)}{\frac{3}{2}P_{p} \Big[ \lambda_{m}^{'r} + \Big( L_{d}-L_{q} \Big)i_{ds}^{r}(t) \Big]}
@@ -1671,63 +1702,63 @@ $$
 
 
 % ---------------------------------------------------------------------------- %
-\subsection{Controlador externo de movimientos: posición/velocidad }
+\subsection{Controlador externo de movimiento: posición y velocidad}
 
-Para el diseño del controlador externo de movimiento, al cual se le puede asignar una consigna de posición angular o una consigna de velocidad angular, se utiliza el método de sintonía serie con acción integral. Los parámetros de diseño del controlador son los valores $\zeta = 0.75$ y $\omega_{n}=800 \frac{rad}{seg}$ teniendo en consideración los valores nominales de carga $J_{l}$ y $b_{l}$ (se desprecia la "incertidumbre" de los datos).
+El controlador externo de movimiento se diseña para recibir consignas de posición o velocidad angular mediante el método de sintonía serie con acción integral. Se adoptan como parámetros de diseño $\zeta = 0.75$ y $\omega_{n}=800 \frac{rad}{seg}$, y se consideran los valores nominales de los parámetros de carga $J_{l}$ y $b_{l}$, sin incluir la incertidumbre de los datos.
 
-En el controlador, se define la consigna de torque a partir de la retroalimentación PID; en el dominio complejo $s$ esto es:
+La consigna de torque se genera mediante una ley PID que combina los errores de posición y velocidad con la integral del error de posición. En el dominio de Laplace $s$, se expresa como:
 \begin{align*}
 T_{m}^{*}(s) & = K_{p}^{\text{mov}}e_{\theta}(s) + K_{d}^{\text{mov}} e_{\omega}(s) + K_{i}^{\text{mov}} \frac{1}{s} e_{\theta}(s) \\
  & = \Big[  K_{p}^{\text{mov}} + sK_{d}^{\text{mov}} + \frac{1}{s}K_{i}^{\text{mov}} \Big] e_{\theta}(s) \\
  & = \Big[  K_{p}^{\text{mov}} + sK_{d}^{\text{mov}} + \frac{1}{s}K_{i}^{\text{mov}} \Big] \Big( \Theta^{*}_{m}(s) - \Theta_{m}(s) \Big) % crear referencia \tag o lo que sea
 \end{align*}
 
-Retomando la dinámica de la velocidad angular del motor que se tiene a la entrada del modulador de torque equivalente, se maneja la expresión
+La dinámica mecánica resultante de la compensación del modulador de torque equivalente se describe mediante:
 \[
 \frac{d\omega_{m}(t)}{dt} = \frac{1}{J_{eq}} \Big[ T_{m}^{*}(t)- \frac{1}{r} T_{dl}(t) \Big]
 \]
 
-que llevada al dominio complejo $s$ queda tal que
+Con condiciones iniciales nulas, su transformación al dominio de Laplace $s$ permite escribir:
 \begin{align*}
 s\Omega_{m}(s)  & = \frac{1}{J_{eq}} \Big[ T_{m}^{*}(s)- \frac{1}{r} T_{dl}(s) \Big] \\ 
 s^{2}\Theta_{m}(s)  & = \frac{1}{J_{eq}} \Big[ T_{m}^{*}(s)- \frac{1}{r} T_{dl}(s) \Big] \\
 s^{2}J_{eq} \Theta_{m}(s)  & = T_{m}^{*}(s)- \frac{1}{r} T_{dl}(s) 
 \end{align*}
 
-Si en esta última expresión se reemplaza la consigna de torque por la expresión %referencia a la expresión de consigna T*m
-se llega a la siguiente expresión
+Al sustituir la consigna de torque por la ley PID anterior, %referencia a la expresión de consigna T*m
+resulta:
 \[
 s^{2}J_{eq} \Theta_{m}(s) = \Big[  K_{p}^{\text{mov}} + sK_{d}^{\text{mov}} + \frac{1}{s}K_{i}^{\text{mov}} \Big] \Big( \Theta^{*}_{m}(s) - \Theta_{m}(s) \Big) - \frac{1}{r} T_{dl}(s) 
 \]
-y despejando el ángulo $\Theta_m(s)$ se llega a la igualdad
+Agrupando los términos que dependen del ángulo $\Theta_m(s)$, se obtiene:
 \[
 \Big[ s^{2}J_{eq} + sK_{d}^{\text{mov}} + K_{p}^{\text{mov}}  + \frac{1}{s}K_{i}^{\text{mov}} \Big] \Theta_{m}(s) = \Big[  K_{p}^{\text{mov}} + sK_{d}^{\text{mov}} + \frac{1}{s}K_{i}^{\text{mov}} \Big] \Theta^{*}_{m}(s) - \frac{1}{r} T_{dl}(s) 
 \]
 
-Se multiplican ambos lados de la igualdad por $s$ para trabajar sin potencias negativas de la variable compleja $s$, lo que deja la expresión tal que
+Para eliminar las potencias negativas de $s$, se multiplican ambos miembros de la igualdad por $s$:
 
 \[
 \Big[ s^{3}J_{eq} + s^{2}K_{d}^{\text{mov}} + sK_{p}^{\text{mov}}  + K_{i}^{\text{mov}} \Big] \Theta_{m}(s) = \Big[  s^{2}K_{d}^{\text{mov}} + sK_{p}^{\text{mov}} + K_{i}^{\text{mov}} \Big] \Theta^{*}_{m}(s) - \frac{s}{r} T_{dl}(s) 
 \]
 
-lo que nos permite llegar a la expresión final
+Finalmente, al despejar la posición angular, resulta:
 \[
 \Theta_{m}(s) = \frac{  s^{2}K_{d}^{\text{mov}} + sK_{p}^{\text{mov}} + K_{i}^{\text{mov}} }{ s^{3}J_{eq} + s^{2}K_{d}^{\text{mov}} + sK_{p}^{\text{mov}}  + K_{i}^{\text{mov}} } \Theta^{*}_{m}(s) - \frac{\frac{s}{r}}{ s^{3}J_{eq} + s^{2}K_{d}^{\text{mov}} + sK_{p}^{\text{mov}}  + K_{i}^{\text{mov}} } T_{dl}(s) 
 \]
 
-A partir de esta expresión, se puede identificar las funciones de transferencia del ángulo motor $\Theta_{m}(s)$ desde la entrada "consigna de ángulo motor" $\Theta_{m}^{*}(s)$ y "torque de perturbación de carga" $T_{dl}(s)$; esto es:
+Esta relación permite distinguir la contribución de la consigna de posición $\Theta_{m}^{*}(s)$ y la del torque perturbador $T_{dl}(s)$ a la respuesta del ángulo motor $\Theta_{m}(s)$. Las funciones de transferencia correspondientes, considerando nula la otra entrada en cada caso, son:
 
 \begin{align}
 G_{\Theta^{*}_{m}}(s) & = \frac{\Theta_{m}(s)}{\Theta^{*}_{m}(s) }  = \frac{  s^{2}K_{d}^{\text{mov}} + sK_{p}^{\text{mov}} + K_{i}^{\text{mov}} }{ s^{3}J_{eq} + s^{2}K_{d}^{\text{mov}} + sK_{p}^{\text{mov}}  + K_{i}^{\text{mov}} } \\
 G_{T_{ld}}(s) & = \frac{\Theta_{m}(s)}{T_{dl}(s) } =  - \frac{\frac{s}{r}}{ s^{3}J_{eq} + s^{2}K_{d}^{\text{mov}} + sK_{p}^{\text{mov}}  + K_{i}^{\text{mov}} } 
 \end{align}
 
-Para ambas funciones de transferencia, el polinomio característico queda tal que
+Ambas funciones de transferencia comparten el siguiente polinomio característico:
 \[
 P(s) = s^{3}J_{eq} + s^{2}K_{d}^{\text{mov}} + sK_{p}^{\text{mov}}  + K_{i}^{\text{mov}} = s^{3}+ s^{2}\frac{K_{d}^{\text{mov}}}{J_{eq}} + s\frac{K_{p}^{\text{mov}}}{J_{eq}}  + \frac{K_{i}^{\text{mov}}}{J_{eq}}
 \]
 
-Los polos deseados se encuentran a distancia $800\;\frac{rad}{seg}$ del origen. Al trabajar con posicionamiento de 3 polos, se plantean 2 polos opuestos conjugados con parámetros  $\zeta=0.75$ y $\omega_{n}=800 \frac{rad}{seg}$ y el tercer polo se coloca como polo único real negativo a una distancia del origen de $|p_{3}|=\omega_{n}=800 \frac{rad}{seg}$. Con ello, el polinomio característico de los polos asignados son:
+La asignación considera tres polos situados a una distancia de $800\;\frac{rad}{seg}$ del origen. Se elige un par de polos complejos conjugados definido por $\zeta=0.75$ y $\omega_{n}=800 \frac{rad}{seg}$, junto con un tercer polo real negativo cuyo módulo es $|p_{3}|=\omega_{n}=800 \frac{rad}{seg}$. El polinomio característico deseado resulta:
 
 \begin{align}
 P^{*}(s)  & = (s^{2}+2\zeta \omega_{n}s+\omega_{n}^{2})(s+\omega_{n})  \\
@@ -1735,8 +1766,8 @@ P^{*}(s)  & = (s^{2}+2\zeta \omega_{n}s+\omega_{n}^{2})(s+\omega_{n})  \\
 P^{*}(s)  & = s^{3} + \omega_{n} (2\zeta+1) s^{2} + \omega_{n}^{2} (2\zeta+1)s + \omega_{n}^{3}
 \end{align}
 
-igualando con la expresión del polinomio característico en % tag a la expresión correcta
-y despejando, además de considerar una $J_{eq}$ con carga máxima $m_{l} =1.5\;[\text{kg}]$, se puede calcular los valores de ganancia tal que:
+Al igualar los coeficientes de los polinomios característicos y despejar las ganancias, % tag a la expresión correcta
+considerando la inercia equivalente $J_{eq}$ para la carga máxima $m_{l} =1.5\;[\text{kg}]$, se obtienen los siguientes valores:
 
 \[
 \begin{cases}
@@ -1754,9 +1785,9 @@ K_{i}^{\text{mov}} & = \omega_{n}^{3}{J_{eq}} = 23463 \mathrm{\frac{Nm}{rad\cdot
 % [TODO] Insertar imagen del bloque de Simulink
 
 % ---------------------------------------------------------------------------- %
-\subsection{Incorporación y diseño de Observador de Estado de orden reducido}
+\subsection{Incorporación y diseño del observador de estado de orden reducido}
 
-El diseño del Observador de Estado de Orden Reducido se realiza a partir de las dinámicas del ángulo motor $\theta_{m}$ y la velocidad angular motor $\omega_{m}$, pero considerando que se tienen las retroalimenaciones no lineales en la dinámica de la velocidad angular, esto es:
+El observador se diseña a partir de las dinámicas de la posición angular $\theta_{m}$ y la velocidad angular $\omega_{m}$ del motor, considerando las compensaciones por realimentación no lineal introducidas en el modulador de torque. La posición angular es la salida medida del subsistema mecánico, cuyo modelo se expresa como:
 
 \[
 \left\{
@@ -1767,18 +1798,18 @@ y & = \begin{bmatrix} 1 & 0 \end{bmatrix} \begin{bmatrix} \theta_{m}(t) \\ \omeg
 \end{aligned}
 \right.
 \]
-que en forma matricial queda de manera tal
+La representación matricial correspondiente es:
 \[
 \left\{
 \begin{aligned}
 \begin{bmatrix} \frac{d \theta_{m}(t) }{dt} \\ \frac{d \omega_{m}(t) }{dt}  \end{bmatrix} 
- & = \begin{bmatrix} 0 & 1 \\0 & 0 \end{bmatrix} \begin{bmatrix} \theta_{m}(t) \\ \omega_{m}(t) \end{bmatrix} + \begin{bmatrix} 0 & 0 \\ \frac{1}{J_{eq}} & \frac{1}{rJ_{eq}} \end{bmatrix} \begin{bmatrix} T^{*}_{m}(t) \\ T_{dl}(t) \end{bmatrix} \\
+ & = \begin{bmatrix} 0 & 1 \\0 & 0 \end{bmatrix} \begin{bmatrix} \theta_{m}(t) \\ \omega_{m}(t) \end{bmatrix} + \begin{bmatrix} 0 & 0 \\ \frac{1}{J_{eq}} & -\frac{1}{rJ_{eq}} \end{bmatrix} \begin{bmatrix} T^{*}_{m}(t) \\ T_{dl}(t) \end{bmatrix} \\
 y & = \begin{bmatrix} 1 & 0 \end{bmatrix} \begin{bmatrix} \theta_{m}(t) \\ \omega_{m}(t) \end{bmatrix}
 \end{aligned}
 \right.
 \]
 
-Para las ecuaciones del Observador de Estado de Orden Reducido, primero se realiza el planteamiento matricial
+Para construir el observador, se parte de la siguiente estructura matricial, que incorpora una corrección proporcional al error entre la salida medida y la estimada:
 
 \[
 \left\{
@@ -1789,35 +1820,35 @@ Para las ecuaciones del Observador de Estado de Orden Reducido, primero se reali
 \right.
 \]
 
-Del modelo reducido de las dinámicas de $\theta_{m}$ y $\omega_{m}$, se pueden identificar las matrices
+A partir del modelo del subsistema mecánico definido por $\theta_{m}$ y $\omega_{m}$, se identifican las matrices:
 \[
 \mathbf{A}=\begin{bmatrix} 0 & 1 \\0 & 0 \end{bmatrix}
 \]
 \[
-\mathbf{B} = \begin{bmatrix} 0 & 0 \\ \frac{1}{J_{eq}} & \frac{1}{rJ_{eq}} \end{bmatrix}
+\mathbf{B} = \begin{bmatrix} 0 & 0 \\ \frac{1}{J_{eq}} & -\frac{1}{rJ_{eq}} \end{bmatrix}
 \]
 \[
 \mathbf{C}=\begin{bmatrix} 1 & 0\end{bmatrix}
 \]
-y la matriz de ganancias del Observador de Estado
+La matriz de ganancias del observador debe tener dimensiones compatibles con el término de corrección:
 \[
 \mathbf{A}-\mathbf{L}\mathbf{C} \in \mathbb{R}^{2\times2} \implies \mathbf{L} \in \mathbb{R}^{2\times1}, \qquad \mathbf{L}=\begin{bmatrix} K_{\theta} \\ K_{\omega} \end{bmatrix}
 \]
 
-Reemplazando estas matrices en el modelo del Observador de Estado, se llega a la expresión matricial
+Al sustituir estas matrices en la estructura del observador, se obtiene:
 \[
 \left\{
 \begin{aligned}
 \begin{bmatrix} \frac{d \hat{\theta}_{m}(t) }{dt} \\ \frac{d \hat{\omega}_{m}(t) }{dt}  \end{bmatrix} 
- & = \begin{bmatrix} 0 & 1 \\0 & 0 \end{bmatrix} \begin{bmatrix} \hat{\theta}_{m}(t) \\ \hat{\omega}_{m}(t) \end{bmatrix} + \begin{bmatrix} 0 & 0 \\ \frac{1}{J_{eq}} & \frac{1}{rJ_{eq}} \end{bmatrix} \begin{bmatrix} T^{*}_{m}(t) \\ T_{dl}(t) \end{bmatrix} + \begin{bmatrix} K_{\theta} \\ K_{\omega} \end{bmatrix} \Bigg( \theta_{m}(t) - \begin{bmatrix} 1 & 0 \end{bmatrix} \begin{bmatrix} \hat{\theta}_{m}(t) \\ \hat{\omega}_{m}(t) \end{bmatrix} \Bigg) \\
+ & = \begin{bmatrix} 0 & 1 \\0 & 0 \end{bmatrix} \begin{bmatrix} \hat{\theta}_{m}(t) \\ \hat{\omega}_{m}(t) \end{bmatrix} + \begin{bmatrix} 0 & 0 \\ \frac{1}{J_{eq}} & -\frac{1}{rJ_{eq}} \end{bmatrix} \begin{bmatrix} T^{*}_{m}(t) \\ T_{dl}(t) \end{bmatrix} + \begin{bmatrix} K_{\theta} \\ K_{\omega} \end{bmatrix} \Bigg( \theta_{m}(t) - \begin{bmatrix} 1 & 0 \end{bmatrix} \begin{bmatrix} \hat{\theta}_{m}(t) \\ \hat{\omega}_{m}(t) \end{bmatrix} \Bigg) \\
 \hat{y} & = \begin{bmatrix} 1 & 0 \end{bmatrix} \begin{bmatrix} \hat{\theta}_{m}(t) \\ \hat{\omega}_{m}(t) \end{bmatrix}
 \end{aligned}
 \right.
 \]
 
-Definiendo el error del estado estimado respecto del estado real tal que $\mathbf{\tilde{x}}=\mathbf{x}-\mathbf{\hat{x}}$, teniendo en cuenta la relación $\mathbf{y} = \mathbf{C}\mathbf{x}$ y restando % hacer referencia a la ecuación del modelo reducido de la planta
-a la ecuación % hacer referencia a la ecuación del modelo del observador de estado
-, queda el modelo del error de estimación tal que
+Se define el error de estimación como $\mathbf{\tilde{x}}=\mathbf{x}-\mathbf{\hat{x}}$ y se utiliza la relación $\mathbf{y} = \mathbf{C}\mathbf{x}$. Al restar las ecuaciones del observador % hacer referencia a la ecuación del modelo reducido de la planta
+de las ecuaciones de la planta, % hacer referencia a la ecuación del modelo del observador de estado
+se obtiene el siguiente modelo del error:
 
 \[
 \left\{
@@ -1829,7 +1860,7 @@ a la ecuación % hacer referencia a la ecuación del modelo del observador de es
 \right.
 \]
 
-La matriz de estado del sistema del error entre el estado de la planta y el estado del observador tiene la expresión:
+La matriz de estado que gobierna la dinámica del error de estimación es:
 
 \[
 \mathbf{A}_{\text{obs}} = \mathbf{A}-\mathbf{L}\mathbf{C} = \begin{bmatrix}
@@ -1838,7 +1869,7 @@ La matriz de estado del sistema del error entre el estado de la planta y el esta
 \end{bmatrix}
 \]
 
-Analizando la estabilidad del sistema del error, vemos que el polinomio característico de $\mathbf{A}_{\text{obs}}$ es
+Para analizar su estabilidad, se calcula el polinomio característico de $\mathbf{A}_{\text{obs}}$:
 
 \begin{align}
 \det(s\mathbf{I}-\mathbf{A}_{\text{obs}}) &  = \Bigg| \begin{matrix}
@@ -1849,13 +1880,13 @@ K_{\omega} & s
  & = s^{2}+K_{\theta}s+K_{\omega}
 \end{align}
 
-Por otro lado, se busca que los polos del observador esten posicionados en $|p_{\text{obs,1}}|=|p_{\text{obs,2}}|=3200\;\frac{rad}{seg}$, esto es:
+El criterio de diseño fija dos polos coincidentes para el observador, con módulos $|p_{\text{obs,1}}|=|p_{\text{obs,2}}|=3200\;\frac{rad}{seg}$. El polinomio deseado se plantea como:
 
 \[
-P^{*}_{\text{obs}}(t) = (s+p_{\text{obs}})^{2}=s^{2}+2p_{\text{obs}}s+p_{\text{obs}}^{2}
+P^{*}_{\text{obs}}(s) = (s+p_{\text{obs}})^{2}=s^{2}+2p_{\text{obs}}s+p_{\text{obs}}^{2}
 \]
 
-Con esto, podemos definir los valores de ganancia tal que:
+Al comparar los coeficientes con el polinomio del error de estimación, se determinan las ganancias:
 \[
 \left\{
 \begin{aligned}

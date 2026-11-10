@@ -7,7 +7,7 @@
 \ProvidesClass{ludusofficial}[2024/01/26 v2.0 LUDUS Official Document Class]
 
 %% Based on article class - two-column, two-sided (different odd/even pages)
-\LoadClass[10pt,a4paper,twocolumn,twoside]{article}
+\LoadClass[12pt,a4paper,twocolumn,twoside]{article}
 
 %% Required packages
 \RequirePackage{ifxetex}
