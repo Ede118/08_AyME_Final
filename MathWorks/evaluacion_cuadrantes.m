@@ -1,16 +1,49 @@
 %% =========================================================================
 %% CURVAS PARAMÉTRICAS: TORQUE vs VELOCIDAD Y EVALUACIÓN DE CUADRANTES
 %% =========================================================================
+clc;
 
-% Parámetros de la máquina (ajustar si difieren en tu modelo)
-% P: pares de polos, lambda_m: flujo de imán permanente
-P = 4;           % Ejemplo: Pares de polos
-lambda_m = 0.08; % [Wb] Flujo de imanes
+%% 1. Extracción de las señales desde el Workspace o el objeto 'out'
+function val = obtener_datos(nombre)
+% Busca la variable en el workspace base; si no existe suelta, busca dentro de 'out'
+if evalin('base', sprintf('exist(''%s'', ''var'')', nombre))
+    val = evalin('base', nombre);
+elseif evalin('base', 'exist(''out'', ''var'')')
+    out_struct = evalin('base', 'out');
+    if isprop(out_struct, nombre) || isfield(out_struct, nombre)
+        val = out_struct.(nombre);
+    else
+        error('No se encontró la variable "%s" dentro del objeto "out".', nombre);
+    end
+else
+    error('No se encontró la variable "%s" ni el objeto "out" en el Workspace.', nombre);
+end
+end
+% Carga de objetos Timeseries
+sig_wm_NL  = obtener_datos('sim_omega_m_NL');
+sig_iq_NL  = obtener_datos('sim_Iq_NL');
+sig_wm_LTI = obtener_datos('sim_omega_m_LTI');
+sig_iq_LTI = obtener_datos('sim_iq_LTI');
+
+% Extracción de vectores de tiempo y datos
+t_wm_NL = sig_wm_NL.Time;
+wm_NL   = squeeze(sig_wm_NL.Data);
+iq_NL   = squeeze(sig_iq_NL.Data);
+
+t_wm_LTI = sig_wm_LTI.Time;
+wm_LTI   = squeeze(sig_wm_LTI.Data);
+iq_LTI   = squeeze(sig_iq_LTI.Data);
+
+%% 2. Parámetros de la máquina
+% Ajustar según los valores de placa de la cátedra si difieren
+P = 4;           % Pares de polos
+lambda_m = 0.08; % [Wb] Flujo magnético concatenado de imanes permanentes
 
 % Cálculo de Te para NL y LTI (SPMSM: Te = 1.5 * P * lambda_m * iqs)
 Te_NL  = 1.5 * P * lambda_m * iq_NL;
 Te_LTI = 1.5 * P * lambda_m * iq_LTI;
 
+%% 3. Generación del gráfico paramétrico
 figure('Name', 'Plano Paramétrico Te vs wm - Cuadrantes de Operación', ...
     'Color', 'w', 'Position', [150 150 900 650]);
 
@@ -36,7 +69,7 @@ for k = 1:length(t_eval)
         'MarkerSize', 7, 'DisplayName', etiquetas{k});
 end
 
-% Anotaciones de los Cuadrantes
+% Anotaciones dinámicas de los Cuadrantes
 xl = xlim; yl = ylim;
 text(xl(2)*0.6, yl(2)*0.8, '\bf Q1: Motor Directo\rm\newline(P_{mec} > 0)', ...
     'Color', [0 0.5 0], 'FontSize', 10, 'HorizontalAlignment', 'center');
