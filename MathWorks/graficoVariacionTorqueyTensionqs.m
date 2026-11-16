@@ -9,8 +9,8 @@ t = [0.0, 0.1, 0.1, 0.3, 0.3, 0.5, 0.5, 0.7, 0.7, 0.9, ...
     0.9, 1.1, 1.1, 1.3, 1.3, 1.5, 1.5, 1.7, 1.7, 1.9, 1.9, 2.0];
 
 % Vector de Tensión de consigna en eje q (Vcc)
-v_qs = [0.0, 0.0, 19.596, 19.596, 19.596, 19.596, 19.596, 19.596, 0.0, 0.0, ...
-    0.0, 0.0, -19.596, -19.596, -19.596, -19.596, -19.596, -19.596, 0.0, 0.0, 0.0, 0.0];
+Tm = [0.0, 0.0, 45/120, 45/120, 45/120, 45/120, 45/120, 45/120, 0.0, 0.0, ...
+    0.0, 0.0, -45/120, -45/120, -45/120, -45/120, -45/120, -45/120, 0.0, 0.0, 0.0, 0.0];
 
 % Vector de Torque de carga (N.m)
 T_l = [0.0, 0.0, 0.0, 0.0, 6.28, 6.28, -6.28, -6.28, -6.28, -6.28, ...
@@ -19,16 +19,16 @@ T_l = [0.0, 0.0, 0.0, 0.0, 6.28, 6.28, -6.28, -6.28, -6.28, -6.28, ...
 %% 2. Creación del Gráfico
 figure('Name', 'Estímulos de Entrada para Simulación de Motor', 'NumberTitle', 'off', 'Color', 'w');
 
-% --- SUBPLOT 1: Tensión de Estator v_qs* ---
+% --- SUBPLOT 1: Tensión de Estator Tm* ---
 subplot(2, 1, 1);
-plot(t, v_qs, 'r-', 'LineWidth', 2.5);
+plot(t, Tm, 'r-', 'LineWidth', 2.5);
 grid on;
 hold on;
 % Marcamos los puntos de transición con círculos
-plot(t, v_qs, 'ro', 'MarkerFaceColor', 'r', 'MarkerSize', 4); 
-ylabel('v_{qs}^{r*} (V)', 'FontSize', 11, 'FontWeight', 'bold');
+plot(t, Tm, 'ro', 'MarkerFaceColor', 'r', 'MarkerSize', 4); 
+ylabel('T_{m}^{*} [Nm]', 'FontSize', 11, 'FontWeight', 'bold');
 title('Consignas de Entrada del Ensayo Dinámico', 'FontSize', 13, 'FontWeight', 'bold');
-ylim([-25, 25]);
+ylim([-0.5, 0.5]);
 xlim([0, 2.0]);
 set(gca, 'FontSize', 10, 'GridLineStyle', ':');
 
@@ -40,7 +40,7 @@ hold on;
 % Marcamos los puntos de transición con círculos
 plot(t, T_l, 'bo', 'MarkerFaceColor', 'b', 'MarkerSize', 4); 
 xlabel('Tiempo (s)', 'FontSize', 11, 'FontWeight', 'bold');
-ylabel('T_l (N\cdotm)', 'FontSize', 11, 'FontWeight', 'bold');
+ylabel('T_{load} [Nm]', 'FontSize', 11, 'FontWeight', 'bold');
 ylim([-8, 8]);
 xlim([0, 2.0]);
 set(gca, 'FontSize', 10, 'GridLineStyle', ':');
@@ -61,4 +61,4 @@ for i = 1:length(t)
 end
 
 % Ajuste de distribución del gráfico en pantalla
-sgtitle('Entradas del Sistema: Voltaje del Estator y Torque de Carga', 'FontSize', 14, 'FontWeight', 'bold');
+sgtitle('Entradas del Sistema: Consigna de Torque Motor y Torque de Carga', 'FontSize', 14, 'FontWeight', 'bold');
