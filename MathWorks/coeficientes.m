@@ -1,4 +1,4 @@
-%[text] # Inicialización de Objetos Especiales
+%[text] #  Inicialización de Objetos Especiales
 BusTypes();
 %[text] # Coeficientes del Modelo "Sistema No Lineal"
 %[text] <u>**Todos los coeficientes se encuentran con unidades SI**</u>
