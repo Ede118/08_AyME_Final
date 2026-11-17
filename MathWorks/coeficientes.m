@@ -92,6 +92,10 @@ zeta_mov_   = 0.5*( Kd_mov/(J_eq_min*wn_mov_) - 1 )
 p_obs       = 3200;
 K_et        = 2*p_obs;
 K_ew        = p_obs^2;
+%[text] ## Controlador discreto
+
+
+Ts          = 0.1;
 %%
 %[text] # Gráficas
 %[text] ## Barrido de masa con ganancias fijas a carga máxima
