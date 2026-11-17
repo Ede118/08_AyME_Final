@@ -86,7 +86,7 @@ Kp_mov      = wn_mov^2 * (2*zeta_mov + 1) * J_eq;
 Ki_mov      = wn_mov^3 * J_eq;
 
 wn_mov_     = (Ki_mov / J_eq_min)^(1/3);
-zeta_mov_   = 0.5*( Kd_mov/(J_eq_min*wn_mov_) - 1 )
+zeta_mov_   = 0.5*( Kd_mov/(J_eq_min*wn_mov_) - 1 ) %[output:361e830f]
 %[text] ## Observador de Estado Reducido
 %[text] ### Ganancias
 p_obs       = 3200;
@@ -346,4 +346,7 @@ end
 %---
 %[metadata:view]
 %   data: {"layout":"inline"}
+%---
+%[output:361e830f]
+%   data: {"dataType":"textualVariable","outputData":{"name":"zeta_mov_","value":"1.6883"}}
 %---
