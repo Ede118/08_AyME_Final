@@ -1856,6 +1856,7 @@ Ahora se verás las gráficas del comportamiento de las variables del Modelo NL 
     \label{fig:comparacion Tm con consigna vd NL DETALLE}
 \end{figure}
 \FloatBarrier
+
 Es posible ver que la aplicación de una consigna de tensión $v_{ds}^r$ modifica la dinámica del accionamiento al alterar el flujo magnético interno de la máquina. Hay 2 casos que son:
 \begin{itemize}
     \item Field forcing $(v^r_{ds}>0)$
@@ -2820,7 +2821,16 @@ K_{\omega}  = p_{\text{obs}}^{2} & = 10\; 240\; 000 \; [\text{s}^{-2}]
 % [End 10/11/2026]
 % ---------------------------------------------------------------------------- %
 \subsection{ Simulación en tiempo continuo con modelo completo NL}
-
+Se analizará el comportamiento del modelo con y sin estimación debido a la siguiente consigna de movimiento.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{consigna movimiento posición.png}
+    \caption{Consigna de movimiento Trapezoidal}
+    \label{fig:cosigna posicion}
+\end{figure}
+\FloatBarrier
+A continuación vemos la comparación con y sin estimación de $\theta_m$, $\omega_m$,$T_m$, $T^\circ_s$, $i_{qs}^r$, $i_{ds}^r$ y $i_{0s}^r$
+\FloatBarrier
 
 % ---------------------------------------------------------------------------- %
 \subsection{Verificación de desempeño y/o mejoras}
