@@ -88,7 +88,7 @@ Kp_mov      = wn_mov^2 * (2*zeta_mov + 1) * J_eq;
 Ki_mov      = wn_mov^3 * J_eq;
 
 wn_mov_     = (Ki_mov / J_eq_min)^(1/3);
-zeta_mov_   = 0.5*( Kd_mov/(J_eq_min*wn_mov_) - 1 ); %[output:09d661e5]
+zeta_mov_   = 0.5*( Kd_mov/(J_eq_min*wn_mov_) - 1 );
 %[text] ## Observador de Estado Reducido
 %[text] ### Ganancias
 p_obs       = 3200;
@@ -96,13 +96,13 @@ K_et        = 2*p_obs;
 K_ew        = p_obs^2;
 %[text] ## Sensores y Actuadores No Ideales
 %[text] ### Sensores de Corriente
-wn_I        = 6000;
+wn_I        = 5*6000;
 zeta_I      = 1;
 
 A1_I        = 1/(wn_I^2);
 A2_I        = 2*zeta_I/(wn_I);
 %[text] ### Encoder
-wn_E        = 2000;
+wn_E        = 5*2000;
 zeta_E      = 1;
 
 A1_E        = 1/(wn_E^2);
@@ -112,11 +112,13 @@ tau_RTD     = 20;
 %[text] ### Inverter No Ideal
 sat_V       = sqrt(2/3)*V_slMAX;
 
-wn_V        = 6000;
+wn_V        = 20*6000;
 zeta_V      = 1;
 
 A1_V        = 1/(wn_V^2);
 A2_V        = 2*zeta_V/(wn_V);
+%[text] ## Controlador
+Ts          = 1e-5;
 %%
 %[text] # Gráficas
 %[text] ## Barrido de masa con ganancias fijas a carga máxima
@@ -392,9 +394,6 @@ fprintf('%% FIN TABLA LATEX\n'); %[output:37cff914]
 %---
 %[metadata:view]
 %   data: {"layout":"inline"}
-%---
-%[output:09d661e5]
-%   data: {"dataType":"textualVariable","outputData":{"name":"zeta_mov_","value":"1.6883"}}
 %---
 %[output:7ed33593]
 %   data: {"dataType":"text","outputData":{"text":"Polos con masa nula:\n   1.0e+03 *\n\n  -3.7225 + 0.0000i\n  -0.4550 + 0.3340i\n  -0.4550 - 0.3340i\n\n","truncated":false}}
