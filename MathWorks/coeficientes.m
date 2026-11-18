@@ -46,6 +46,8 @@ b_eq        = b_m + b_l/(r^2);
 n_mNOM      = 6600;
 V_slNOM     = 30.0;
 I_sNOM      = 0.4;
+
+V_slMAX     = 48.0;
 I_sMAX      = 2.0;
 T_sMAX      = 115.0;
 T_amb       = 20;                             % Var -15 ~ 40
@@ -86,16 +88,35 @@ Kp_mov      = wn_mov^2 * (2*zeta_mov + 1) * J_eq;
 Ki_mov      = wn_mov^3 * J_eq;
 
 wn_mov_     = (Ki_mov / J_eq_min)^(1/3);
-zeta_mov_   = 0.5*( Kd_mov/(J_eq_min*wn_mov_) - 1 ) %[output:361e830f]
+zeta_mov_   = 0.5*( Kd_mov/(J_eq_min*wn_mov_) - 1 ); %[output:09d661e5]
 %[text] ## Observador de Estado Reducido
 %[text] ### Ganancias
 p_obs       = 3200;
 K_et        = 2*p_obs;
 K_ew        = p_obs^2;
-%[text] ## Controlador discreto
+%[text] ## Sensores y Actuadores No Ideales
+%[text] ### Sensores de Corriente
+wn_I        = 6000;
+zeta_I      = 1;
 
+A1_I        = 1/(wn_I^2);
+A2_I        = 2*zeta_I/(wn_I);
+%[text] ### Encoder
+wn_E        = 2000;
+zeta_E      = 1;
 
-Ts          = 0.1;
+A1_E        = 1/(wn_E^2);
+A2_E        = 2*zeta_E/(wn_E);
+%[text] ### RTD
+tau_RTD     = 20;
+%[text] ### Inverter No Ideal
+sat_V       = sqrt(2/3)*V_slMAX;
+
+wn_V        = 6000;
+zeta_V      = 1;
+
+A1_V        = 1/(wn_V^2);
+A2_V        = 2*zeta_V/(wn_V);
 %%
 %[text] # Gráficas
 %[text] ## Barrido de masa con ganancias fijas a carga máxima
@@ -134,39 +155,8 @@ mapa_barrido.AxesStyle.GridVisible = 'on';
 mapa_barrido.AxesStyle.GridType = 's-plane';
 mapa_barrido.AxesStyle.GridDamping = [0 0.5 0.75 0.9 1];
 mapa_barrido.AxesStyle.GridFrequency = [400 800 1200 2000 3000 4000];
-disp('Polos con masa nula:'); disp(polos_barrido(:,1));
-disp('Polos con masa maxima, punto de diseno:'); disp(polos_barrido(:,end));
-
-%[text] ## Tabla del barrido de masa: polos y propiedades del par conjugado
-n_masas = numel(masas_barrido);
-polo_real_tabla = zeros(n_masas,1);
-polo_complejo_pos = complex(zeros(n_masas,1));
-polo_complejo_neg = complex(zeros(n_masas,1));
-for k_masa = 1:n_masas
-    polos_masa = polos_barrido(:,k_masa);
-    [~, indice_real] = min(abs(imag(polos_masa)));
-    polo_real_tabla(k_masa) = real(polos_masa(indice_real));
-    par_conjugado = polos_masa;
-    par_conjugado(indice_real) = [];
-    [~, orden_par] = sort(imag(par_conjugado), 'descend');
-    polo_complejo_pos(k_masa) = par_conjugado(orden_par(1));
-    polo_complejo_neg(k_masa) = par_conjugado(orden_par(2));
-end
-wn_par = abs(polo_complejo_pos);
-wd_par = abs(imag(polo_complejo_pos));
-zeta_par = -real(polo_complejo_pos)./wn_par;
-% Tau de la envolvente del par. No es el tiempo de establecimiento exacto
-% de la respuesta completa (tambien depende de ceros y residuos modales).
-tau_par_ms = 1000./(-real(polo_complejo_pos));
-J_barrido = J_m + (J_l_min + masas_barrido(:)*l_l^2)/r^2;
-tabla_polos_masa = table(masas_barrido(:), J_barrido, ...
-    polo_real_tabla, polo_complejo_pos, polo_complejo_neg, ...
-    wn_par, wd_par, zeta_par, tau_par_ms, ...
-    'VariableNames', {'Masa_kg','J_eq_kgm2','Polo_real', ...
-    'Polo_complejo_pos','Polo_complejo_neg','wn_rad_s', ...
-    'wd_rad_s','Zeta_par','Tau_envolvente_ms'});
-fprintf('\nBARRIDO DE MASA: GANANCIAS FIJAS A CARGA MAXIMA\n');
-disp(tabla_polos_masa);
+disp('Polos con masa nula:'); disp(polos_barrido(:,1)); %[output:7ed33593]
+disp('Polos con masa maxima, punto de diseno:'); disp(polos_barrido(:,end)); %[output:90d5e3af]
 
 %[text] ## Comparación de polos
 %%\ LTI equivalente de tres estados y comparacion de polos de control
@@ -211,13 +201,13 @@ p_corriente = [-Rd/L_d; -Rq/L_q; -R0/L_ls];
 p_movimiento = roots(conv([1, 2*zeta_mov*wn_mov, wn_mov^2], [1, wn_mov]));
 p_movimiento_ganancias = roots([1, Kd_mov/J_eq, Kp_mov/J_eq, Ki_mov/J_eq]);
 
-fprintf('\nCarga: %.3f kg; J_eq: %.9g kg m^2; Rs: %.6f ohm\n', ...
-    m_l, J_eq, Rs_lineal);
-disp('Planta LTI de tres estados [s^-1]:'); disp(p_planta);
-disp('Movimiento ideal: polos objetivo [s^-1]:'); disp(p_movimiento);
-disp('Movimiento ideal: polos con ganancias actuales [s^-1]:');
-disp(p_movimiento_ganancias);
-disp('Modulador interno: polos de corriente d, q, 0 [s^-1]:'); disp(p_corriente);
+fprintf('\nCarga: %.3f kg; J_eq: %.9g kg m^2; Rs: %.6f ohm\n', ... %[output:group:41b7cf21] %[output:99965155]
+    m_l, J_eq, Rs_lineal); %[output:group:41b7cf21] %[output:99965155]
+disp('Planta LTI de tres estados [s^-1]:'); disp(p_planta); %[output:659462fb]
+disp('Movimiento ideal: polos objetivo [s^-1]:'); disp(p_movimiento); %[output:9570c196]
+disp('Movimiento ideal: polos con ganancias actuales [s^-1]:'); %[output:2ca1f117]
+disp(p_movimiento_ganancias); %[output:8ccdda97]
+disp('Modulador interno: polos de corriente d, q, 0 [s^-1]:'); disp(p_corriente); %[output:7ac1d1b1]
 
 %%\ Pole-Zero Map nativo (Control System Toolbox, MATLAB R2026b)
 % La planta GNL se representa aqui por su LTI equivalente, bajo las
@@ -338,6 +328,62 @@ for vista = 1:2
 end
 % Exportacion opcional: exportgraphics(figura_simbolos,'Mapa.pdf','ContentType','vector');
 
+%[text] 
+
+%[text] ## Tabla del barrido de masa: polos y propiedades del par conjugado
+n_masas = numel(masas_barrido);
+polo_real_tabla = zeros(n_masas,1);
+polo_complejo_pos = complex(zeros(n_masas,1));
+polo_complejo_neg = complex(zeros(n_masas,1));
+for k_masa = 1:n_masas
+    polos_masa = polos_barrido(:,k_masa);
+    [~, indice_real] = min(abs(imag(polos_masa)));
+    polo_real_tabla(k_masa) = real(polos_masa(indice_real));
+    par_conjugado = polos_masa;
+    par_conjugado(indice_real) = [];
+    [~, orden_par] = sort(imag(par_conjugado), 'descend');
+    polo_complejo_pos(k_masa) = par_conjugado(orden_par(1));
+    polo_complejo_neg(k_masa) = par_conjugado(orden_par(2));
+end
+wn_par = abs(polo_complejo_pos);
+wd_par = abs(imag(polo_complejo_pos));
+zeta_par = -real(polo_complejo_pos)./wn_par;
+% Tau de la envolvente del par. No es el tiempo de establecimiento exacto
+% de la respuesta completa (tambien depende de ceros y residuos modales).
+tau_par_ms = 1000./(-real(polo_complejo_pos));
+J_barrido = J_m + (J_l_min + masas_barrido(:)*l_l^2)/r^2;
+tabla_polos_masa = table(masas_barrido(:), J_barrido, ...
+    polo_real_tabla, polo_complejo_pos, polo_complejo_neg, ...
+    wn_par, wd_par, zeta_par, tau_par_ms, ...
+    'VariableNames', {'Masa_kg','J_eq_kgm2','Polo_real', ...
+    'Polo_complejo_pos','Polo_complejo_neg','wn_rad_s', ...
+    'wd_rad_s','Zeta_par','Tau_envolvente_ms'});
+fprintf('\nBARRIDO DE MASA: GANANCIAS FIJAS A CARGA MAXIMA\n'); %[output:4a877c51]
+disp(tabla_polos_masa); %[output:61b6eea4]
+
+%[text] ## Tabla del barrido en LaTeX para Overleaf
+% fprintf interpreta las barras invertidas: escribir \\ para imprimir \.
+fprintf('\n%% INICIO TABLA LATEX: copiar desde \\begin{table} hasta \\end{table}\n'); %[output:5bdb6780]
+fprintf('\\begin{table}[!htbp]\n'); %[output:1458e66b]
+fprintf('    \\centering\n'); %[output:28e0b7e2]
+fprintf('    \\small\n'); %[output:8d9d007b]
+fprintf('    \\caption{Polos del lazo cerrado ideal de movimiento al variar la masa, con ganancias fijas calculadas para $m_l=%.2f\\;\\mathrm{kg}$.}\n', masa_diseno); %[output:05a2ea8d]
+fprintf('    \\label{tab:polos-barrido-masa}\n'); %[output:0afbc253]
+fprintf('    \\begin{tabular}{r r r r r r r}\n'); %[output:10ff5a7b]
+fprintf('        \\hline\n'); %[output:2f61e83d]
+fprintf('        $m_l$ & $p_r$ & $p_{2,3}$ & $\\omega_n$ & $\\omega_d$ & $\\zeta$ & $\\tau$ \\\\\n'); %[output:93b96c23]
+fprintf('        $[\\mathrm{kg}]$ & $[\\mathrm{s^{-1}}]$ & $[\\mathrm{s^{-1}}]$ & $[\\mathrm{rad/s}]$ & $[\\mathrm{rad/s}]$ & & $[\\mathrm{ms}]$ \\\\\n'); %[output:25f8b41b]
+fprintf('        \\hline\n'); %[output:8dcd14ec]
+for k_masa = 1:n_masas %[output:group:86cf9ac3]
+    fprintf('        %.2f & $%.2f$ & $%.2f \\pm j%.2f$ & %.2f & %.2f & %.4f & %.3f \\\\\n', ... %[output:9c1c0dfd]
+        masas_barrido(k_masa), polo_real_tabla(k_masa), ... %[output:9c1c0dfd]
+        real(polo_complejo_pos(k_masa)), wd_par(k_masa), ... %[output:9c1c0dfd]
+        wn_par(k_masa), wd_par(k_masa), zeta_par(k_masa), tau_par_ms(k_masa)); %[output:9c1c0dfd]
+end %[output:group:86cf9ac3]
+fprintf('        \\hline\n'); %[output:53d368a2]
+fprintf('    \\end{tabular}\n'); %[output:5f579d1f]
+fprintf('\\end{table}\n'); %[output:12b58f46]
+fprintf('%% FIN TABLA LATEX\n'); %[output:37cff914]
 
 %[appendix]{"version":"1.0"}
 %---
@@ -347,6 +393,84 @@ end
 %[metadata:view]
 %   data: {"layout":"inline"}
 %---
-%[output:361e830f]
+%[output:09d661e5]
 %   data: {"dataType":"textualVariable","outputData":{"name":"zeta_mov_","value":"1.6883"}}
+%---
+%[output:7ed33593]
+%   data: {"dataType":"text","outputData":{"text":"Polos con masa nula:\n   1.0e+03 *\n\n  -3.7225 + 0.0000i\n  -0.4550 + 0.3340i\n  -0.4550 - 0.3340i\n\n","truncated":false}}
+%---
+%[output:90d5e3af]
+%   data: {"dataType":"text","outputData":{"text":"Polos con masa maxima, punto de diseno:\n   1.0e+02 *\n\n  -8.0000 + 0.0000i\n  -6.0000 + 5.2915i\n  -6.0000 - 5.2915i\n\n","truncated":false}}
+%---
+%[output:99965155]
+%   data: {"dataType":"text","outputData":{"text":"\nCarga: 1.500 kg; J_eq: 4.58263889e-05 kg m^2; Rs: 1.020000 ohm\n","truncated":false}}
+%---
+%[output:659462fb]
+%   data: {"dataType":"text","outputData":{"text":"Planta LTI de tres estados [s^-1]:\n   0.0000 + 0.0000i\n -88.1705 +72.8888i\n -88.1705 -72.8888i\n\n","truncated":false}}
+%---
+%[output:9570c196]
+%   data: {"dataType":"text","outputData":{"text":"Movimiento ideal: polos objetivo [s^-1]:\n   1.0e+02 *\n\n  -8.0000 + 0.0000i\n  -6.0000 + 5.2915i\n  -6.0000 - 5.2915i\n\n","truncated":false}}
+%---
+%[output:2ca1f117]
+%   data: {"dataType":"text","outputData":{"text":"Movimiento ideal: polos con ganancias actuales [s^-1]:\n","truncated":false}}
+%---
+%[output:8ccdda97]
+%   data: {"dataType":"text","outputData":{"text":"   1.0e+02 *\n\n  -8.0000 + 0.0000i\n  -6.0000 + 5.2915i\n  -6.0000 - 5.2915i\n\n","truncated":false}}
+%---
+%[output:7ac1d1b1]
+%   data: {"dataType":"text","outputData":{"text":"Modulador interno: polos de corriente d, q, 0 [s^-1]:\n       -5000\n       -5000\n       -5000\n\n","truncated":false}}
+%---
+%[output:4a877c51]
+%   data: {"dataType":"text","outputData":{"text":"\nBARRIDO DE MASA: GANANCIAS FIJAS A CARGA MAXIMA\n","truncated":false}}
+%---
+%[output:61b6eea4]
+%   data: {"dataType":"text","outputData":{"text":"    <strong>Masa_kg<\/strong>    <strong>J_eq_kgm2<\/strong>     <strong>Polo_real<\/strong>    <strong>Polo_complejo_pos<\/strong>    <strong>Polo_complejo_neg<\/strong>    <strong>wn_rad_s<\/strong>    <strong>wd_rad_s<\/strong>    <strong>Zeta_par<\/strong>    <strong>Tau_envolvente_ms<\/strong>\n    <strong>_______<\/strong>    <strong>__________<\/strong>    <strong>_________<\/strong>    <strong>_________________<\/strong>    <strong>_________________<\/strong>    <strong>________<\/strong>    <strong>________<\/strong>    <strong>________<\/strong>    <strong>_________________<\/strong>\n\n        0      1.9785e-05     -3722.5      -454.99+334.01i      -454.99-334.01i      564.43      334.01     0.80611          2.1978      \n     0.15      2.2389e-05       -3163      -465.31+338.83i      -465.31-338.83i       575.6      338.83     0.80839          2.1491      \n      0.3      2.4993e-05     -2713.5      -476.83+344.39i      -476.83-344.39i      588.19      344.39     0.81067          2.0972      \n     0.45      2.7597e-05     -2341.5      -489.82+350.98i      -489.82-350.98i      602.58      350.98     0.81286          2.0416      \n      0.6      3.0201e-05     -2025.5      -504.63+359.04i      -504.63-359.04i      619.32      359.04     0.81481          1.9817      \n     0.75      3.2806e-05     -1750.3      -521.74+369.33i      -521.74-369.33i      639.23      369.33      0.8162          1.9167      \n      0.9       3.541e-05     -1505.1      -541.65+383.25i      -541.65-383.25i      663.52      383.25     0.81632          1.8462      \n     1.05      3.8014e-05     -1282.1      -564.47+403.48i      -564.47-403.48i      693.84      403.48     0.81354          1.7716      \n      1.2      4.0618e-05     -1080.7      -587.89+434.64i      -587.89-434.64i      731.11      434.64      0.8041           1.701      \n     1.35      4.3222e-05     -914.75      -602.88+479.56i      -602.88-479.56i      770.35      479.56      0.7826          1.6587      \n      1.5      4.5826e-05        -800         -600+529.15i         -600-529.15i         800      529.15        0.75          1.6667      \n\n","truncated":false}}
+%---
+%[output:5bdb6780]
+%   data: {"dataType":"text","outputData":{"text":"\n% INICIO TABLA LATEX: copiar desde \\begin{table} hasta \\end{table}\n","truncated":false}}
+%---
+%[output:1458e66b]
+%   data: {"dataType":"text","outputData":{"text":"\\begin{table}[!htbp]\n","truncated":false}}
+%---
+%[output:28e0b7e2]
+%   data: {"dataType":"text","outputData":{"text":"    \\centering\n","truncated":false}}
+%---
+%[output:8d9d007b]
+%   data: {"dataType":"text","outputData":{"text":"    \\small\n","truncated":false}}
+%---
+%[output:05a2ea8d]
+%   data: {"dataType":"text","outputData":{"text":"    \\caption{Polos del lazo cerrado ideal de movimiento al variar la masa, con ganancias fijas calculadas para $m_l=1.50\\;\\mathrm{kg}$.}\n","truncated":false}}
+%---
+%[output:0afbc253]
+%   data: {"dataType":"text","outputData":{"text":"    \\label{tab:polos-barrido-masa}\n","truncated":false}}
+%---
+%[output:10ff5a7b]
+%   data: {"dataType":"text","outputData":{"text":"    \\begin{tabular}{r r r r r r r}\n","truncated":false}}
+%---
+%[output:2f61e83d]
+%   data: {"dataType":"text","outputData":{"text":"        \\hline\n","truncated":false}}
+%---
+%[output:93b96c23]
+%   data: {"dataType":"text","outputData":{"text":"        $m_l$ & $p_r$ & $p_{2,3}$ & $\\omega_n$ & $\\omega_d$ & $\\zeta$ & $\\tau$ \\\\\n","truncated":false}}
+%---
+%[output:25f8b41b]
+%   data: {"dataType":"text","outputData":{"text":"        $[\\mathrm{kg}]$ & $[\\mathrm{s^{-1}}]$ & $[\\mathrm{s^{-1}}]$ & $[\\mathrm{rad\/s}]$ & $[\\mathrm{rad\/s}]$ & & $[\\mathrm{ms}]$ \\\\\n","truncated":false}}
+%---
+%[output:8dcd14ec]
+%   data: {"dataType":"text","outputData":{"text":"        \\hline\n","truncated":false}}
+%---
+%[output:9c1c0dfd]
+%   data: {"dataType":"text","outputData":{"text":"        0.00 & $-3722.52$ & $-454.99 \\pm j334.01$ & 564.43 & 334.01 & 0.8061 & 2.198 \\\\\n        0.15 & $-3163.04$ & $-465.31 \\pm j338.83$ & 575.60 & 338.83 & 0.8084 & 2.149 \\\\\n        0.30 & $-2713.47$ & $-476.83 \\pm j344.39$ & 588.19 & 344.39 & 0.8107 & 2.097 \\\\\n        0.45 & $-2341.46$ & $-489.82 \\pm j350.98$ & 602.58 & 350.98 & 0.8129 & 2.042 \\\\\n        0.60 & $-2025.46$ & $-504.63 \\pm j359.04$ & 619.32 & 359.04 & 0.8148 & 1.982 \\\\\n        0.75 & $-1750.34$ & $-521.74 \\pm j369.33$ & 639.23 & 369.33 & 0.8162 & 1.917 \\\\\n        0.90 & $-1505.06$ & $-541.65 \\pm j383.25$ & 663.52 & 383.25 & 0.8163 & 1.846 \\\\\n        1.05 & $-1282.09$ & $-564.47 \\pm j403.48$ & 693.84 & 403.48 & 0.8135 & 1.772 \\\\\n        1.20 & $-1080.68$ & $-587.89 \\pm j434.64$ & 731.11 & 434.64 & 0.8041 & 1.701 \\\\\n        1.35 & $-914.75$ & $-602.88 \\pm j479.56$ & 770.35 & 479.56 & 0.7826 & 1.659 \\\\\n        1.50 & $-800.00$ & $-600.00 \\pm j529.15$ & 800.00 & 529.15 & 0.7500 & 1.667 \\\\\n","truncated":false}}
+%---
+%[output:53d368a2]
+%   data: {"dataType":"text","outputData":{"text":"        \\hline\n","truncated":false}}
+%---
+%[output:5f579d1f]
+%   data: {"dataType":"text","outputData":{"text":"    \\end{tabular}\n","truncated":false}}
+%---
+%[output:12b58f46]
+%   data: {"dataType":"text","outputData":{"text":"\\end{table}\n","truncated":false}}
+%---
+%[output:37cff914]
+%   data: {"dataType":"text","outputData":{"text":"% FIN TABLA LATEX\n","truncated":false}}
 %---
