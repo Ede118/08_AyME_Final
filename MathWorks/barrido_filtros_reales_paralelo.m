@@ -5,8 +5,8 @@ if nargin<1, opciones=struct(); end
 opciones.UsarParalelo=true;
 if ~isfield(opciones,'IncluirSaturacion'), opciones.IncluirSaturacion=true; end
 if ~isfield(opciones,'CarpetaResultados')
-    opciones.CarpetaResultados=fullfile(fileparts(mfilename('fullpath')), ...
-        'Barridos_Reales','resultados_paralelo');
+    opciones.CarpetaResultados=fullfile(fileparts(fileparts(mfilename('fullpath'))), ...
+        'Agents','Barridos_Reales','resultados_paralelo');
 end
 resultados=barrido_filtros_reales(opciones);
 end

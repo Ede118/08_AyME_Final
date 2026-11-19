@@ -6,7 +6,7 @@ raiz=fileparts(mfilename('fullpath')); addpath(raiz);
 cfg=struct('Perfil','verificacion','TiempoFinal',0.06, ...
     'InstantePerturbacion',0.04,'FactoresFrecuencia',[1 2],'FactoresTau',[1 2], ...
     'TorquePerturbacion',5,'PasoMaximo',2e-4,'LimiteCalculoSegundos',90,'VerGraficos',false, ...
-    'CarpetaResultados',fullfile(raiz,'Barridos_Reales','verificacion'));
+    'CarpetaResultados',fullfile(fileparts(raiz),'Agents','Barridos_Reales','verificacion'));
 resultados=barrido_filtros_reales(cfg);
 assert(height(resultados.tabla)==12,'Se esperaban doce casos.');
 assert(all(resultados.tabla.completo | ~cellfun(@isempty,resultados.tabla.mensaje)), ...
@@ -26,3 +26,4 @@ for caso=fieldnames(resultados.series)'
 end
 fprintf('VERIFICACION_BARRIDO_OK: %d/12 casos completos; los restantes tienen diagnostico. Cuatro bases iguales y fuentes intactas.\n',sum(tabla.completo));
 end
+

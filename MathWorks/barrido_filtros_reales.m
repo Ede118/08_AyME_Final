@@ -7,14 +7,16 @@ if nargin<1, opciones=struct(); end
 raiz=fileparts(mfilename('fullpath')); addpath(raiz);
 cfg=configuracion_defecto(raiz,opciones);
 cfg.VerGraficos=seleccionar_graficos(cfg.VerGraficos);
-fuente='Modelo_Actuadores_Reales'; sensores='Sensores_Reales'; banco='Banco_Barrido_Filtros_Reales';
+fuente='Simulaciones_Actuadores_Reales'; sensores='Sensores_Reales'; banco='Banco_Barrido_Filtros_Reales';
 assert(~bdIsLoaded(fuente) && ~bdIsLoaded(sensores) && ~bdIsLoaded(banco), ...
-    'Guarde y cierre Modelo_Actuadores_Reales, Sensores_Reales y el banco antes de ejecutar.');
+    'Guarde y cierre Simulaciones_Actuadores_Reales, Sensores_Reales y el banco antes de ejecutar.');
 archivos={fullfile(raiz,[fuente '.slx']),fullfile(raiz,[sensores '.slx']),fullfile(raiz,'coeficientes.m')};
 hashes=cellfun(@hash_archivo,archivos,'UniformOutput',false);
 codigo=fileread(archivos{3}); corte=strfind(codigo,'%[text] # Gráficas');
 assert(~isempty(corte),'No se encontro el fin de parametros en coeficientes.m.');
 evalin('base',codigo(1:corte(1)-1));
+origenConsigna='perfil corto de verificacion';
+if strcmp(cfg.Perfil,'modelo'), origenConsigna=asegurar_consigna(raiz); end
 variables={'wn_E','zeta_E','wn_I','zeta_I','wn_V','zeta_V','tau_RTD','T_ld', ...
     'T_amb','init_theta','init_w','init_Ts','r','sat_V','m_l','b_eq', ...
     'J_eq','Kp_mov','Ki_mov','Kd_mov','K_et','K_ew','Pp','I_sMAX','T_sMAX'};
@@ -22,7 +24,9 @@ base=struct();
 for k=1:numel(variables), base.(variables{k})=evalin('base',variables{k}); end
 anteriorGen=Simulink.fileGenControl('getConfig');
 % Ruta corta: los filtros de biblioteca generan archivos sujetos al limite de Windows.
-trabajo=tempname(raiz); mkdir(trabajo);
+carpetaTemporal=fullfile(fileparts(raiz),'Agents','bt');
+if ~isfolder(carpetaTemporal), mkdir(carpetaTemporal); end
+trabajo=tempname(carpetaTemporal); mkdir(trabajo);
 Simulink.fileGenControl('set','CacheFolder',fullfile(trabajo,'cache'), ...
     'CodeGenFolder',fullfile(trabajo,'codegen'),'createDir',true);
 limpieza=onCleanup(@() cerrar_banco(banco,fuente,sensores,anteriorGen));
@@ -40,10 +44,10 @@ set_param(banco,'SolverType','Variable-step','Solver','ode15s', ...
     'ReturnWorkspaceOutputs','on','SaveOutput','off');
 [tiempo,thetaRef,omegaRef]=preparar_entradas(banco,fuente,cfg,base);
 sensor=[core '/Subsystem Reference'];
-encoder=[sensor '/Encoder- LP 2nd1'];
+encoder=[sensor '/Encoder- LP 2nd'];
 rtd=[sensor '/Sensor RTD - LP 1nd'];
 corriente=cellfun(@(f)[sensor '/Sensor ' f ' - LP 2nd'],{'Ia','Ib','Ic'},'UniformOutput',false);
-inversor=cellfun(@(f)[core '/Sensor ' f ' - LP 2nd'],{'Va','Vb','Vc'},'UniformOutput',false);
+inversor=cellfun(@(f)[core '/Inverter ' f ' - LP 2nd'],{'Va','Vb','Vc'},'UniformOutput',false);
 todos=[{encoder,rtd},corriente,inversor];
 for k=1:numel(todos)
     parametros=get_param(todos{k},'DialogParameters');
@@ -101,7 +105,9 @@ for g=1:numel(grupos)
     grupo=grupos{g};
     if strcmp(grupo,'RTD'), factores=cfg.FactoresTau; else, factores=cfg.FactoresFrecuencia; end
     for factor=[0 factores]
-        id=id+1; etiqueta=sprintf('%s_x%d',grupo,factor);
+        id=id+1;
+        sufijo=strrep(strrep(strrep(sprintf('%.17g',factor),'.','p'),'-','m'),'+','p');
+        etiqueta=[grupo '_x' sufijo];
         parametro=casos(id).parametro; A1=casos(id).A1; A2=casos(id).A2;
         fila=struct('caso',etiqueta,'grupo',grupo,'factor',factor,'parametro',parametro, ...
             'A1',A1,'A2',A2,'ideal',factor==0,'completo',false,'tiempo_final',NaN, ...
@@ -155,6 +161,12 @@ for g=1:numel(grupos)
                 indices=unique(round(linspace(1,numel(s.Time),min(cfg.MaxPuntosTraza,numel(s.Time)))));
                 trazas.(campo)=struct('Time',s.Time(indices),'Data',s.Data(indices));
             end
+            abc=out.corrientes; nombresABC={'Ia','Ib','Ic'};
+            for kABC=1:3
+                campo=nombresABC{kABC}; s=abc.(campo);
+                indices=unique(round(linspace(1,numel(s.Time),min(cfg.MaxPuntosTraza,numel(s.Time)))));
+                trazas.(campo)=struct('Time',s.Time(indices),'Data',s.Data(indices));
+            end
             series.(etiqueta)=trazas;
             fprintf('t=%g s; error max=%g rad; Imax=%g A; completo=%d\n', ...
                 fila.tiempo_final,fila.error_max_rad,fila.corriente_max_A,fila.completo);
@@ -170,7 +182,7 @@ for g=1:numel(grupos)
         filas=[filas;fila]; %#ok<AGROW>
         resultados=struct('tabla',struct2table(filas,'AsArray',true),'series',series,'configuracion',cfg, ...
             'parametros_base',base,'correcciones_cableado_en_copia',correcciones, ...
-            'referencia',struct('Time',tiempo,'theta',thetaRef,'omega',omegaRef));
+            'referencia',struct('Time',tiempo,'theta',thetaRef,'omega',omegaRef,'origen',origenConsigna));
         guardar_resultados(resultados,cfg.CarpetaResultados);
         if cfg.VerGraficos
             figura=mostrar_estados_barrido(resultados,etiqueta,figura,id,numeroCasos);
@@ -199,7 +211,7 @@ cfg=struct('Perfil','modelo','TiempoFinal',16,'FactoresFrecuencia',1:5, ...
     'PasoMaximo',1e-3,'RelTol',1e-5,'AbsTol',1e-7,'LimiteCalculoSegundos',120, ...
     'MaxPuntosTraza',4000,'VerGraficos','preguntar','PausarGraficos',true, ...
     'UsarParalelo',false,'NumTrabajadores',2, ...
-    'CarpetaResultados',fullfile(raiz,'Barridos_Reales','resultados'));
+    'CarpetaResultados',fullfile(fileparts(raiz),'Agents','Barridos_Reales','resultados'));
 nombres=fieldnames(opciones);
 for k=1:numel(nombres)
     assert(isfield(cfg,nombres{k}),'Opcion desconocida: %s.',nombres{k});
@@ -209,9 +221,11 @@ validatestring(cfg.Perfil,{'modelo','verificacion'}); validatestring(cfg.EscalaR
 validateattributes(cfg.TiempoFinal,{'double'},{'scalar','positive','finite'});
 validateattributes(cfg.NumTrabajadores,{'double'},{'scalar','integer','positive','finite'});
 for valores={cfg.FactoresFrecuencia,cfg.FactoresTau}
-    validateattributes(valores{1},{'double'},{'vector','integer','positive','finite','nonempty'});
+    validateattributes(valores{1},{'double'},{'vector','real','positive','finite','nonempty'});
     assert(numel(unique(valores{1}))==numel(valores{1}),'No repetir factores.');
 end
+cfg.FactoresFrecuencia=cfg.FactoresFrecuencia(:).';
+cfg.FactoresTau=cfg.FactoresTau(:).';
 assert(cfg.InstantePerturbacion>0 && cfg.InstantePerturbacion<cfg.TiempoFinal, ...
     'La perturbacion debe ocurrir dentro del horizonte simulado.');
 if ~isfolder(cfg.CarpetaResultados), mkdir(cfg.CarpetaResultados); end
@@ -238,6 +252,8 @@ if strcmp(cfg.Perfil,'modelo')
     posicion=Simulink.ID.getFullName([fuente ':1']); velocidad=Simulink.ID.getFullName([fuente ':2']);
     tp=slResolve(get_param(posicion,'BreakpointsForDimension1'),posicion); qp=slResolve(get_param(posicion,'Table'),posicion);
     tv=slResolve(get_param(velocidad,'BreakpointsForDimension1'),velocidad); qv=slResolve(get_param(velocidad,'Table'),velocidad);
+    validar_tabla(tp,qp); validar_tabla(tv,qv);
+    assert(cfg.TiempoFinal<=min(tp(end),tv(end)), 'La consigna no cubre TiempoFinal.');
     t=unique([t;tp(:);tv(:)]); t=t(t>=0 & t<=cfg.TiempoFinal);
     theta=base.r*interp1(tp,qp,t,'linear','extrap'); omega=base.r*interp1(tv,qv,t,'linear','extrap');
 else
@@ -263,6 +279,35 @@ for k=1:4
     nombre=sprintf('constante%d',k); add_block('simulink/Sources/Constant',[banco '/' nombre],'Value',num2str(valores(k),17));
     add_line(banco,[nombre '/1'],['Sistema/' num2str(k+3)]);
 end
+end
+
+function origen=asegurar_consigna(raiz)
+% Usa los puntos del usuario; si faltan todos, genera el perfil sin figuras.
+nombres={'consigna_t','consigna_p','consigna_v'};
+existen=cellfun(@(n) evalin('base',sprintf('exist(''%s'',''var'')==1',n)),nombres);
+assert(all(existen)||~any(existen), ...
+    'Faltan puntos de la consigna. Ejecute suavizador_de_consigna para exportar los tres vectores.');
+if all(existen)
+    origen='puntos del workspace';
+else
+    codigoPerfil=fileread(fullfile(raiz,'suavizador_de_consigna.m'));
+    cortePerfil=strfind(codigoPerfil,'%% 6.');
+    assert(~isempty(cortePerfil),'No se identifica el fin del calculo del perfil.');
+    % Solo el calculo numerico: no abre figuras, guarda MAT ni cambia Ts en base.
+    eval(codigoPerfil(1:cortePerfil(1)-1));
+    assignin('base','consigna_t',t(:));
+    assignin('base','consigna_p',p_s(:));
+    assignin('base','consigna_v',v_s(:));
+    origen='suavizador_de_consigna.m (generacion automatica)';
+end
+fprintf('Referencia: %s; puntos en coordenadas de la carga.\n',origen);
+end
+
+function validar_tabla(t,y)
+validateattributes(t,{'numeric'},{'vector','real','finite','nonempty'});
+validateattributes(y,{'numeric'},{'vector','real','finite','nonempty'});
+assert(numel(t)==numel(y) && numel(t)>1 && t(1)==0 && all(diff(t(:))>0), ...
+    'Tabla de consigna invalida: tiempos crecientes desde cero y un valor por instante.');
 end
 
 function numero=normalizar_cableado(core)

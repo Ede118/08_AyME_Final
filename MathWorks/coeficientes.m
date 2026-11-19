@@ -40,7 +40,6 @@ b_m         = 15.0e-6;
 %[text] ### Coeficientes del Sistema Mecanico Equivalente
 J_eq_min    = J_m + J_l_min/(r^2);
 J_eq        = J_m + J_l/(r^2);
-J_eq        = J_eq_min;
 b_eq        = b_m + b_l/(r^2);
 %[text] ## Sistemas de la Maquina PMSM
 %[text] ### Especificaciones de Operacion
@@ -103,7 +102,7 @@ zeta_I      = 1;
 A2_I        = 1/(wn_I^2);
 A1_I        = 2*zeta_I/(wn_I);
 %[text] ### Encoder
-wn_E        = 2000;
+wn_E        = 5000;
 zeta_E      = 1;
 
 A2_E        = 1/(wn_E^2);

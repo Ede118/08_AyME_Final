@@ -5,9 +5,9 @@ raiz=fileparts(mfilename('fullpath')); addpath(raiz);
 cfg=struct('Perfil','verificacion','TiempoFinal',0.04, ...
     'InstantePerturbacion',0.025,'FactoresFrecuencia',1,'FactoresTau',1, ...
     'VerGraficos',false,'IncluirSaturacion',true,'NumTrabajadores',2, ...
-    'CarpetaResultados',fullfile(raiz,'Barridos_Reales','verificacion_serial_parsim'));
+    'CarpetaResultados',fullfile(fileparts(raiz),'Agents','Barridos_Reales','verificacion_serial_parsim'));
 serie=barrido_filtros_reales(cfg);
-cfg.CarpetaResultados=fullfile(raiz,'Barridos_Reales','verificacion_paralela');
+cfg.CarpetaResultados=fullfile(fileparts(raiz),'Agents','Barridos_Reales','verificacion_paralela');
 paralelo=barrido_filtros_reales_paralelo(cfg);
 assert(height(paralelo.tabla)==8 && isequal(serie.tabla.caso,paralelo.tabla.caso));
 assert(isequal(serie.tabla.completo,paralelo.tabla.completo));
@@ -37,3 +37,4 @@ assert(fid~=-1); cerrar=onCleanup(@() fclose(fid));
 fprintf(fid,'%s',jsonencode(informe,'PrettyPrint',true));
 disp(informe); fprintf('PARALELO_EQUIVALENTE_OK\n');
 end
+
