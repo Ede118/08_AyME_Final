@@ -1,3 +1,4 @@
+%% 
 %% Perfil S-Curve a partir de un trapezoidal (filtrado FIR)
 
 
