@@ -1,0 +1,30 @@
+\begin{thebibliography}{1}
+
+\bibitem{astrom2020feedback}
+Karl~Johan {\AA}str{\"o}m and Richard~M. Murray.
+\newblock Feedback systems: An introduction for scientists and engineers.
+\newblock \url{https://fbswiki.org/wiki/index.php/FBS_release_3.1.5}, 2020.
+\newblock Prepublicaci{\'o}n electr{\'o}nica de la segunda edici{\'o}n,
+  versi{\'o}n 3.1.5, 24 de julio de 2020.
+
+\bibitem{julian2026guia}
+Gabriel~L. Juli{\'a}n.
+\newblock Proyecto global integrador: Gu{\'i}a de trabajo y especificaciones.
+  control de accionamiento de {CA} con motor sincr{\'o}nico de imanes
+  permanentes.
+\newblock Gu{\'i}a de trabajo, Universidad Nacional de Cuyo, Facultad de
+  Ingenier{\'i}a, Mendoza, Argentina, 2026.
+\newblock Revisi{\'o}n del 18 de febrero de 2026.
+
+\bibitem{krause2013electric}
+Paul~C. Krause, Oleg Wasynczuk, Scott~D. Sudhoff, and Steven~D. Pekarek.
+\newblock {\em Analysis of Electric Machinery and Drive Systems}.
+\newblock Wiley-IEEE Press, 3 edition, 2013.
+
+\bibitem{ogata2010control}
+Katsuhiko Ogata.
+\newblock {\em Ingenier{\'i}a de control moderna}.
+\newblock Pearson Educaci{\'o}n, Madrid, Espa{\~n}a, 5 edition, 2010.
+\newblock Traducci{\'o}n de Sebasti{\'a}n Dormido Canto y Raquel Dormido Canto.
+
+\end{thebibliography}

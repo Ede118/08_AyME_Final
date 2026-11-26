@@ -268,9 +268,8 @@
         \raisebox{0.2\height}{\fontsize{7.5}{9}\selectfont\sffamily\textcolor{darkgray}{Facultad de Ingeniería - UNCuyo}}%
     }
     \fancyhead[C]{%
-        % Apuntamos directamente a tu archivo logo.jpeg
-        \IfFileExists{Logo.jpg}{%
-            \includegraphics[height=12mm]{Logo.jpg}%
+        \IfFileExists{attachments/Logo.jpg}{%
+            \includegraphics[height=12mm]{attachments/Logo.jpg}%
         }{%
             \fontsize{7.5}{9}\selectfont\sffamily\textcolor{darkgray}{[LOGO NO ENCONTRADO]}%
         }%

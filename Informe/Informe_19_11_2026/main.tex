@@ -2943,11 +2943,11 @@ A continuación vemos la comparación con y sin estimación de $\theta_m$, $\ome
 \end{figure}
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[trim=13.5bp 0 0 0,clip,width=0.86\linewidth,height=0.40\textheight,keepaspectratio]{attachments/comparacion estimacion velocidad angulan.png}
+    \includegraphics[width=0.86\linewidth,height=0.40\textheight,keepaspectratio]{attachments/comparacion estimacion velocidad angulan.png}
     \caption{Velocidad angular del motor $\omega_m$ (rad/s) con y sin estimación.}
     \label{fig:comparacion estimación velocidad angular}
     \par\medskip
-    \includegraphics[trim=13.5bp 0 0 0,clip,width=0.86\linewidth,height=0.40\textheight,keepaspectratio]{attachments/DETALLE comparacion estimacion velocidad angulan.png}
+    \includegraphics[width=0.86\linewidth,height=0.40\textheight,keepaspectratio]{attachments/DETALLE comparacion estimacion velocidad angulan.png}
     \caption{Detalle de la velocidad angular $\omega_m$ (rad/s) en la transición de $t=9\,\mathrm{s}$.}
     \label{fig:detalle comparacion estimación velocidad angular}
 \end{figure}
@@ -3107,13 +3107,11 @@ Ya conociendo la nueva consigna se evalúa que con ese cambio se cumpla con las 
 Se ve que suavizar la consigna permitió que los parámetros problemáticos se encuentren dentro de los rangos operativos.
 
 \subsubsection{Acción integral en el observador}
-En la sección \ref{subsubsec: rechazo a perturbaciones} durante las simulaciones se evidenció la presencia de un error en régimen permanente ante la aplicación de la perturbación $T_{ld}$. Con la intensión de eliminar o disminuir este error, se busca incorporar una acción de tipo integral a la estructura del observador de estados previamente formulado.
+\begingroup
+\raggedbottom
+En las simulaciones de la sección~\ref{subsubsec: rechazo a perturbaciones}, la perturbación de torque $T_{ld}$ produjo un error de posición en régimen permanente. Para reducirlo, se añade una acción integral al observador de orden reducido de la sección~\ref{subsec:observador de estado de orden reducido}, cuya dinámica se describe en \eqref{eq:observador-mecanico}.
 
-Se sigue trabajando con el diseño que se inició previamente \ref{subsec:observador de estado de orden reducido}, donde se diseñó un observador de estado de orden reducido 
-considerando las compensaciones por retroalimentación no lineal introducidas en el modulador de torque.
-\ref{eq:observador-mecanico}
-
-Para anular el error de régimen permantente ante una perturbación constante ya mencionado, se expande el vector de estados del observador incorporando una variable acumulativa $\hat{v}(t)$, que corresponde a la integral del error de estimación angular:
+El observador aumentado incorpora el estado $\hat{v}(t)$, que acumula el error de estimación de la posición angular.
 \begin{equation}
 \mathbf{z}(t) = \begin{bmatrix} \theta_m(t) \\ \omega_m(t) \\ v(t) \end{bmatrix}, \qquad
 \hat{\mathbf{z}}(t) = \begin{bmatrix} \hat{\theta}_m(t) \\ \hat{\omega}_m(t) \\ \hat{v}(t) \end{bmatrix}
@@ -3146,23 +3144,22 @@ K_{\omega} = 3,0720\times 10^7\;\mathrm{s^{-2}} \\
 K_{i} = 3,2768\times 10^{10}\;\mathrm{s^{-3}}
 \end{cases}
 \end{equation}
-\par\medskip
-\noindent\begin{minipage}{\linewidth}
-    \centering
-    \includegraphics[width=0.74\linewidth,height=0.35\textheight,keepaspectratio]{attachments/observador_de_estado_reducido_retroalimentacion_integral.jpg}
-    \captionof{figure}{Diagrama de bloques del observador con retroalimentación integral.}
-    \label{fig:bloque obs de estado red con retroa integral}
-\end{minipage}
-\par\medskip
-Simulando nuevamente el modelo con perturbación de torque $T_{ld}$ tipo escalón y consigna de posición y velocidad nulas con el observador con retroalimentación integral que se ha desarrollado, así poder evaluar si se ha conseguido el cometido de anular el error de posición angular $\theta_m$ de estado estacionario 
-A continuación se ve que habiendo cambiado por el observador con retroalimentación integral el error de estado estacionario que se ha mencionado desaparece, solo queda un error transitorio en el momento de aplicación de perturbación de carga.
+
+La Figura~\ref{fig:bloque obs de estado red con retroa integral} muestra la implementación del observador aumentado.
+
+Se repitió el ensayo con una perturbación escalón de torque $T_{ld}$ y consignas nulas de posición y velocidad. Las Figuras~\ref{fig:posicion angular retroalimentacion integral} y~\ref{fig:DETALLE posicion angular retroalimentacion integral} muestran que, con la acción integral, el error de posición se limita al transitorio posterior al escalón. En ambos casos, el error de velocidad en régimen permanente es nulo, como muestran las Figuras~\ref{fig:velocidad angular retroalimentacion integral} y~\ref{fig:DETALLE velocidad angular retroalimentacion integral}.
+
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[width=0.86\linewidth,height=0.40\textheight,keepaspectratio]{attachments/posicion angular con perturbacion retroalimentacion integral.png}
+    \includegraphics[trim=130bp 111bp 130bp 106bp,clip,width=0.48\linewidth,height=0.20\textheight,keepaspectratio]{attachments/observador_de_estado_reducido_retroalimentacion_integral.jpg}
+    \caption{Diagrama de bloques del observador con retroalimentación integral.}
+    \label{fig:bloque obs de estado red con retroa integral}
+    \par\medskip
+    \includegraphics[width=0.86\linewidth,height=0.30\textheight,keepaspectratio]{attachments/posicion angular con perturbacion retroalimentacion integral.png}
     \caption{Comparación posición angular con y sin estimador con retroalimentación integral}
     \label{fig:posicion angular retroalimentacion integral}
     \par\medskip
-    \includegraphics[width=0.86\linewidth,height=0.40\textheight,keepaspectratio]{attachments/DETALLE posicion angular con perturbacion retroalimentacion integral.png}
+    \includegraphics[width=0.86\linewidth,height=0.30\textheight,keepaspectratio]{attachments/DETALLE posicion angular con perturbacion retroalimentacion integral.png}
     \caption{DETALLE comparación posición angular con y sin estimador con retroalimentación integral}
     \label{fig:DETALLE posicion angular retroalimentacion integral}
 \end{figure}
@@ -3176,7 +3173,8 @@ A continuación se ve que habiendo cambiado por el observador con retroalimentac
     \caption{DETALLE Comparación velocidad angular con y sin estimador con retroalimentación integral}
     \label{fig:DETALLE velocidad angular retroalimentacion integral}
 \end{figure}
-No hubo variación en el nulo error estacionario presente en la velocidad angular $\omega_m$
+\FloatBarrier
+\endgroup
 
 \subsubsection{Comportamiento térmico}
 En ésta sección se tiene la intensión de evaluar el comportamiento térmico del motor frente a exigencias de trabajo continuo. Para este cometido se plantea un escenario representativo exigente, donde: $T_{amb}=40^\circ C$ en vez de los $20^\circ$ en simulaciones anteriores, planteando la consigna suavizada de manera periódica 38 veces seguidas (tiempo de simulación $t=608\;s$), agregando además la perturbación de torque de tipo escalón planteada previamente. Se han planteado 2 escenarios que se verán a continuación:
@@ -3226,18 +3224,23 @@ De acuerdo con las especificaciones dadas, los parámetros nominales ($\times 1$
 \end{itemize}
 Con lo anterior se obtienen los sensores de corriente y posición.
 \FloatBarrier
-\begin{figure}[htpb]
+\begin{figure}[!htbp]
     \centering
-    \includegraphics[width=1\linewidth]{sensor_real_corriente.jpg}
-    \caption{Bloque de implementación Sensor no lineal de corriente}
-    \label{fig:sensor no lineal corriente}
-\end{figure}
-\FloatBarrier
-\begin{figure}[htpb]
-    \centering
-    \includegraphics[width=1\linewidth]{sensor_real_posicion.jpg}
-    \caption{Bloque de implementación Sensor no lineal de posición angular}
-    \label{fig:sensor no lineal posición}
+    \begin{minipage}[t]{0.48\linewidth}
+        \centering
+        \captionsetup{width=\linewidth}
+        \includegraphics[trim=162bp 145bp 162bp 145bp,clip,width=\linewidth,height=0.30\textheight,keepaspectratio]{attachments/sensor_real_corriente.jpg}
+        \caption{Filtro de segundo orden del sensor de corriente.}
+        \label{fig:sensor no lineal corriente}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\linewidth}
+        \centering
+        \captionsetup{width=\linewidth}
+        \includegraphics[trim=162bp 145bp 162bp 145bp,clip,width=\linewidth,height=0.30\textheight,keepaspectratio]{attachments/sensor_real_posicion.jpg}
+        \caption{Filtro de segundo orden del sensor de posición angular.}
+        \label{fig:sensor no lineal posición}
+    \end{minipage}
 \end{figure}
 \FloatBarrier
 \paragraph{Filtro pasa bajo (LP) de primer orden}
@@ -3259,38 +3262,28 @@ Al incorporar los filtros pasa bajos con las frecuencias naturales nominales ($\
     \item \textbf{Divergencia de las variables simuladas ($\omega_n \times 1$):} En $t = 1,142\text{ s}$ se producen picos transitorios no físicos en corrientes ($\sim 600\text{ A}$), tensiones ($10^{16}$--$10^{17}\text{ V}$) y torque ($-2 \times 10^8\text{ N}\cdot\text{m}$). Por efecto de los integradores del sistema, este impulso provoca que la posición estimada $\hat{\theta}_m(t)$ diverja linealmente ($-3,2 \times 10^5\text{ rad}$) y que la temperatura estimada $T^\circ_s(t)$ crezca cuadráticamente ($10^{12}\text{ }^\circ\text{C}$).
 \end{enumerate}
 \FloatBarrier
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
-    \includegraphics[width=1\linewidth]{posicion con sensor real x1.png}
+    \includegraphics[width=0.88\linewidth,height=0.39\textheight,keepaspectratio]{attachments/posicion con sensor real x1.png}
     \caption{Posición Angular con y sin estimación con sensores no ideales}
     \label{fig:posicion angular sensor no ideal}
-
-\end{figure}
-\FloatBarrier
-\begin{figure}
-    \centering
-    \includegraphics[width=1\linewidth]{velocidad con sensor real x1.png}
+    \par\medskip
+    \includegraphics[width=0.88\linewidth,height=0.39\textheight,keepaspectratio]{attachments/velocidad con sensor real x1.png}
     \caption{Velocidad Angular con y sin estimación con sensores no ideales}
     \label{fig:velocidad angular sensor no ideal}
 \end{figure}
-\FloatBarrier
-\begin{figure}
+
+\begin{figure}[!htbp]
     \centering
-    \includegraphics[width=1\linewidth]{temperatura con sensor real x1.png}
-    \caption{Torque motor con y sin estimación con sensores no ideales}
-    \label{fig:torque motor sensor real}
-\end{figure}
-\FloatBarrier
-\begin{figure}
-    \centering
-    \includegraphics[width=1\linewidth]{Idq0 con sensor real x1.png}
+    \includegraphics[width=0.78\linewidth,height=0.26\textheight,keepaspectratio]{attachments/temperatura con sensor real x1.png}
+    \caption{Temperatura del estator con y sin estimación, con sensores no ideales y frecuencias nominales.}
+    \label{fig:temperatura-sensor-real-x1}
+    \par\medskip
+    \includegraphics[width=0.78\linewidth,height=0.26\textheight,keepaspectratio]{attachments/Idq0 con sensor real x1.png}
     \caption{Corrientes virtuales $i_{dq0}$ con y sin estimación con sensores no ideales}
     \label{fig:corrientes virtuales sensor real}
-\end{figure}
-\FloatBarrier
-\begin{figure}
-    \centering
-    \includegraphics[width=1\linewidth]{Iabc con sensor real x1.png}
+    \par\medskip
+    \includegraphics[width=0.78\linewidth,height=0.26\textheight,keepaspectratio]{attachments/Iabc con sensor real x1.png}
     \caption{Corrientes reales $i_{abc}$ con y sin estimación con sensores no ideales}
     \label{fig:corrientes reales sensor real}
 \end{figure}
@@ -3303,44 +3296,35 @@ Se evalúa el efecto de incrementar las frecuencias naturales de los sensores de
     \item \textbf{Influencia del sensor de temperatura ($\tau = 20\text{ s}$):} Debido a que la constante de tiempo térmica propia del estator ($\tau_{ts-amb} = R_{ts-amb} \cdot C_{ts} \approx 120\text{ s}$) es un orden de magnitud superior a la del sensor ($\tau = 20\text{ s}$), este filtro no compromete la estabilidad del lazo electromecánico ni el seguimiento de trayectoria, introduciendo únicamente un leve desfasaje durante los transitorios térmicos lentos en la actualización de $R_s(T^\circ_s)$.
 \end{itemize}
 \FloatBarrier
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
-    \includegraphics[width=1\linewidth]{posicion con sensor real x2.png}
+    \includegraphics[width=0.78\linewidth,height=0.27\textheight,keepaspectratio]{attachments/posicion con sensor real x2.png}
     \caption{Posición Angular con y sin estimación con sensores no ideales con ancho de banda aumentado $\times2$}
     \label{fig:posicion angular sensor no ideal x2}
-\end{figure}
-\FloatBarrier
-\begin{figure}
-    \centering
-    \includegraphics[width=1\linewidth]{velocidad con sensor real x2.png}
+    \par\medskip
+    \includegraphics[width=0.78\linewidth,height=0.27\textheight,keepaspectratio]{attachments/velocidad con sensor real x2.png}
     \caption{Velocidad Angular con y sin estimación con sensores no ideales con ancho de banda aumentado $\times2$}
     \label{fig:velocidad angular sensor no ideal x2}
 \end{figure}
-\FloatBarrier
-\begin{figure}
+
+\begin{figure}[!htbp]
     \centering
-    \includegraphics[width=1\linewidth]{torque con sensor real x2.png}
+    \includegraphics[width=0.88\linewidth,height=0.39\textheight,keepaspectratio]{attachments/torque con sensor real x2.png}
     \caption{Torque motor con y sin estimación con sensores no ideales con ancho de banda aumentado $\times2$}
     \label{fig:torque motor sensor no ideal x2}
-\end{figure}
-\FloatBarrier
-\begin{figure}
-    \centering
-    \includegraphics[width=1\linewidth]{temperatura con sensor real x2.png}
+    \par\medskip
+    \includegraphics[width=0.88\linewidth,height=0.39\textheight,keepaspectratio]{attachments/temperatura con sensor real x2.png}
     \caption{Temperatura del estator con y sin estimación con sensores no ideales con ancho de banda aumentado $\times2$}
     \label{fig:temperatura del estator sensor no ideal x2}
 \end{figure}
-\FloatBarrier
-\begin{figure}
+
+\begin{figure}[!htbp]
     \centering
-    \includegraphics[width=1\linewidth]{Idq0 con sensor real x2.png}
+    \includegraphics[width=0.88\linewidth,height=0.39\textheight,keepaspectratio]{attachments/Idq0 con sensor real x2.png}
     \caption{Corrientes virtuales $i_{dq0}$ con y sin estimación con sensores no ideales con ancho de banda aumentado $\times2$}
     \label{fig:Idq0 sensor no ideal x2}
-\end{figure}
-\FloatBarrier
-\begin{figure}
-    \centering
-    \includegraphics[width=1\linewidth]{Iabc con sensor real x2.png}
+    \par\medskip
+    \includegraphics[width=0.88\linewidth,height=0.39\textheight,keepaspectratio]{attachments/Iabc con sensor real x2.png}
     \caption{Corrientes reales $i_{abc}$ con y sin estimación con sensores no ideales con ancho de banda aumentado $\times2$}
     \label{fig:Iabc sensor no ideal x2}
 \end{figure}
@@ -3365,16 +3349,13 @@ A la salida de cada filtro se incorpora un bloque de saturación simétrica que 
     |y(t)| \le \frac{\sqrt{2} \cdot V_{sl\text{-max}}}{\sqrt{3}} \approx 39,192\text{ V}
 \end{equation}
 \FloatBarrier
-\begin{figure}
+\begin{figure}[!htbp]
     \centering
-    \includegraphics[width=1\linewidth]{Inversor_Real_unidad.jpg}
+    \includegraphics[trim=36bp 128bp 36bp 127bp,clip,width=0.78\linewidth,height=0.24\textheight,keepaspectratio]{attachments/Inversor_Real_unidad.jpg}
     \caption{Inversor real con ganancia unitaria subbloque para una sola fase}
     \label{fig:Inversor real unidad}
-\end{figure}
-\FloatBarrier
-\begin{figure}
-    \centering
-    \includegraphics[width=1\linewidth]{Inversor_Real_completo.jpg}
+    \par\medskip
+    \includegraphics[trim=62bp 105bp 62bp 104bp,clip,width=0.78\linewidth,height=0.25\textheight,keepaspectratio]{attachments/Inversor_Real_completo.jpg}
     \caption{Inversor real trifásico con ganancia unitaria y saturación}
     \label{fig:Inversor real Completo}
 \end{figure}
@@ -3384,35 +3365,29 @@ A la salida de cada filtro se incorpora un bloque de saturación simétrica que 
 
 
 Se evalúa el comportamiento del accionamiento frente a la consigna trapezoidal de movimiento al variar la frecuencia natural del modulador manteniendo $\xi = 1$ y la saturación en $\pm 39,192\text{ V}$
-\paragraph{Simulación con $\omega_n \times 1$}
+\paragraph{Simulación con $\omega_n \times 1$}\mbox{}\\
 \FloatBarrier
-\begin{figure}[htpb]
+\begin{figure}[!htbp]
     \centering
-    \includegraphics[width=1\linewidth]{posicion con inversor real x1.png}
+    \includegraphics[width=0.88\linewidth,height=0.39\textheight,keepaspectratio]{attachments/posicion con inversor real x1.png}
     \caption{Posición Angular comparación con y sin estimación, con sensores no lineales e inverter no lineal}
     \label{fig:inverter real posicion x1}
-\end{figure}
-\FloatBarrier
-\begin{figure}[htpb]
-    \centering
-    \includegraphics[width=1\linewidth]{velocidad con inversor real x1.png}
+    \par\medskip
+    \includegraphics[width=0.88\linewidth,height=0.39\textheight,keepaspectratio]{attachments/velocidad con inversor real x1.png}
     \caption{Velocidad Angular comparación con y sin estimación, con sensores no lineales e inverter no lineal con $\omega_n \times1$}
     \label{fig:inverter real velocidad x1}
 \end{figure}
 \FloatBarrier
 Es posible observar que el sistema presenta una severa degradación e inestabilidad en el seguimiento tanto en posición angular como en velocidad angular. Esta situación se traduce en transitorios abruptos y quiebres severos en la respuesta temporal, evidenciando que las restricciones dinámicas de la etapa de modulación penalizan fuertemente el desempeño global del lazo cerrado.
 
-\paragraph{Simulación con $\omega_n \times 2$}
-\begin{figure}[htpb]
+\paragraph{Simulación con $\omega_n \times 2$}\mbox{}\\
+\begin{figure}[!htbp]
     \centering
-    \includegraphics[width=1\linewidth]{posicion con inversor real x2.png}
+    \includegraphics[width=0.88\linewidth,height=0.39\textheight,keepaspectratio]{attachments/posicion con inversor real x2.png}
     \caption{Posición Angular comparación con y sin estimación, con sensores no lineales e inverter no lineal con $\omega_n \times2$}
     \label{fig:inverter real posicion x2}
-\end{figure}
-\FloatBarrier
-\begin{figure}[htpb]
-    \centering
-    \includegraphics[width=1\linewidth]{velocidad con inversor real x2.png}
+    \par\medskip
+    \includegraphics[width=0.88\linewidth,height=0.39\textheight,keepaspectratio]{attachments/velocidad con inversor real x2.png}
     \caption{Velocidad Angular comparación con y sin estimación, con sensores no lineales e inverter no lineal con $\omega_n \times2$}
     \label{fig:inverter real velocidad x2}
 \end{figure}
@@ -3876,6 +3851,17 @@ límite admisible del estator. Por lo tanto, la evaluación del
 accionamiento debe considerar tanto la respuesta de movimiento
 como la evolución de la temperatura bajo las condiciones de
 carga y los ciclos de trabajo previstos.
+
+\paragraph{Simulación con sensores y actuadores no ideales}
+Al incorporar el ancho de banda finito de los sensores y del
+inversor, junto con la saturación de tensión de este último,
+se observó una degradación del seguimiento respecto del modelo
+ideal. Con los parámetros nominales, algunos ensayos presentaron
+respuestas divergentes y dificultades de integración numérica.
+Se variaron las frecuencias naturales de los filtros para evaluar
+su influencia en la respuesta del lazo cerrado. Estos ensayos
+mostraron la importancia de seleccionar sensores y un inversor
+con anchos de banda compatibles con la dinámica del accionamiento.
 
 \paragraph{Control discretizado}
 Se discretizó el controlador y se implementó tanto mediante
