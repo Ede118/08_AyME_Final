@@ -1,3 +1,4 @@
+function [consigna_t, consigna_p, consigna_v] = suavizador_de_consigna()
 %% Perfil S-Curve a partir de un trapezoidal (filtrado FIR)
 
 
@@ -19,7 +20,7 @@ a_orig = gradient(v_orig, Ts_perfil);
 %   N = a_max / (j_max * Ts_perfil) - 1
 % Con a_max ~ pi rad/s^2 (aprox. del trapezoidal) y j_max deseado.
 a_max_trap = max(abs(a_orig));       % aceleración máx del trapezoidal
-j_max_deseado = 5000;                    % [rad/s^3] AJUSTA este valor
+j_max_deseado = 2000;                    % [rad/s^3] AJUSTA este valor
 N = round(a_max_trap / (j_max_deseado * Ts_perfil) - 1);
 N = max(N, 2);                        % al menos orden 2
 if mod(N,2)==0, N = N+1; end          % forzar impar para simetría (opcional)
@@ -38,13 +39,6 @@ j_s = gradient(a_s, Ts_perfil);
 
 %% 6. Gráficas comparativas
 
-
-figure('Name','Consigna de movimiento','Color','w');
-plot(t, p_orig, 'b--', 'LineWidth',1.2); hold on;
-plot(t, p_s, 'r-', 'LineWidth',1.5);
-grid on; ylabel('Posición [rad]');
-legend('Trapezoidal','S-Curve (FIR)','Location','best');
-title('Posición');
 
 figure('Name','Consigna de movimiento','Color','w');
 plot(t, p_orig, 'b--', 'LineWidth',1.2); hold on;
@@ -108,4 +102,5 @@ fprintf('   Archivo guardado: perfil_lut.mat\n');
 hold on
 plot(consigna_t,consigna_p)
 plot(consigna_t,p_orig)
-consigna_p;
+
+end
